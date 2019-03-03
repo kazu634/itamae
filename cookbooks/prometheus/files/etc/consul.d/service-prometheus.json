@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "prometheus",
+    "port": 9100
+  }
+}

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# if the commit is first one, then pass
+
+if [ -z "$(git branch)" ]; then
+  exit 0
+fi
+
+# Otherwise, check if the branch is master, and if it is, fail.
+
+branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
+       "$(git describe --contains --all HEAD)"
+
+if [ "${branch##refs/heads/}" = "master" ]; then
+  echo "Do not commit on the master branch!"
+  exit 1
+fi

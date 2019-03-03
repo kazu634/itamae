@@ -1,0 +1,5 @@
+Defaults    env_reset
+Defaults    secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# User privilege specification
+webadm ALL=(root) /usr/sbin/service, /home/webadm/letsencrypt/letsencrypt-auto

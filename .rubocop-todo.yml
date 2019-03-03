@@ -1,0 +1,14 @@
+MethodLength:
+  Enabled: false
+
+LineLength:
+  Enabled: false
+
+NumericLiterals:
+  Enabled: false
+
+AmbiguousRegexpLiteral:
+  Enabled: false
+
+AbcSize:
+  Enabled: false

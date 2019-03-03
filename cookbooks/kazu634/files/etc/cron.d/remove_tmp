@@ -1,0 +1,8 @@
+MAILTO=""
+
+TARGET_DIR="/home/kazu634/tmp"
+FIND="/usr/bin/find"
+
+3 3 * * *    kazu634 ${FIND} ${TARGET_DIR} -type f -mtime +7 -delete
+3 10 * * *   kazu634 ${FIND} ${TARGET_DIR}/* -type d -mtime +7 -empty -delete
+

@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "consul",
+    "port": 8600
+  }
+}

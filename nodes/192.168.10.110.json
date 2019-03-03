@@ -1,0 +1,12 @@
+{
+  "recipes": [
+    "roles/base.rb",
+    "cookbooks/grafana/default.rb"
+  ],
+  "prometheus": {
+    "manager": true
+  },
+  "td-agent": {
+    "forward": true
+  }
+}

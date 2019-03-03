@@ -1,0 +1,12 @@
+{
+  "recipes": [
+    "roles/base.rb",
+    "cookbooks/nginx/default.rb",
+    "cookbooks/blog/default.rb",
+    "cookbooks/statup/default.rb"
+  ],
+  "blog": {
+    "production":  true
+  },
+  "is_ec2": true
+}

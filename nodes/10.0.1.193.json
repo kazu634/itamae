@@ -1,0 +1,9 @@
+{
+  "recipes": [
+    "roles/base.rb"
+  ],
+  "blog": {
+    "production":  true
+  },
+  "is_ec2": true
+}

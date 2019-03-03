@@ -1,0 +1,8 @@
+{
+  "recipes": [
+    "roles/base.rb"
+  ],
+  "blog": {
+    "production":  true
+  }
+}

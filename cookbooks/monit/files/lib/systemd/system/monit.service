@@ -1,0 +1,10 @@
+[Service]
+Type=simple
+KillMode=process
+ExecStart=/etc/init.d/monit start
+ExecStop=/etc/init.d/monit stop
+ExecReload=/etc/init.d/monit reload
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,1 @@
+12 3 * * * root openssl rand 48 > /etc/letsencrypt/live/status.kazu634.com/ticket.key

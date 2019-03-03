@@ -1,0 +1,9 @@
+{
+  "check": {
+    "id": "ssh",
+    "name": "SSH TCP on port 10022",
+    "tcp": "localhost:10022",
+    "interval": "10s",
+    "timeout": "1s"
+  }
+}

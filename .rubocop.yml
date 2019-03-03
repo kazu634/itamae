@@ -1,0 +1,16 @@
+inherit_from: .rubocop-todo.yml
+
+AllCops:
+  Exclude:
+    - 'cookbooks/**/*'
+    - 'tmp/**/*'
+    - 'vendor/bundle/**/*'
+    - 'site-cookbooks/sensu-custom/files/default/tw.rb'
+    - 'images/**/*'
+
+Style/CommandLiteral:
+  EnforcedStyle: mixed
+  AllowInnerBackticks: true
+
+Style/PerlBackrefs:
+  Enabled: false

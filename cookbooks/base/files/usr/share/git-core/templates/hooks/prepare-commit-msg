@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ "$2" = "" ]; then
+  mv $1 $1.tmp
+
+  ID=`git branch | grep ^\* | awk '{print $2}' | cut -f 2 -d "/"`
+
+  cat <<EOF > $1
+
+
+This commit refs/fixes #${ID}.
+#           ^^^^^^^^^^
+EOF
+
+  cat $1.tmp >> $1
+fi
+
+exit 0

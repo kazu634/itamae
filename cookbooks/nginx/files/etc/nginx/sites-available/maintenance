@@ -1,0 +1,14 @@
+server {
+  # allow access from localhost
+  listen 80 reuseport backlog=1024;
+
+  root /usr/share/nginx/html;
+  index index.html index.htm;
+
+  location / {
+    gzip on;
+
+    try_files $uri $uri/ /index.html;
+
+  }
+}

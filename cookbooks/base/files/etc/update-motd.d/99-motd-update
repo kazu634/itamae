@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo
+cat /etc/motd.tail

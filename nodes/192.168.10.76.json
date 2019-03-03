@@ -1,0 +1,6 @@
+{
+  "recipes": [
+    "roles/base.rb",
+    "cookbooks/nginx/default.rb"
+  ]
+}

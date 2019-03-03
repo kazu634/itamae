@@ -1,0 +1,11 @@
+# Configuration for cron-apt. For further information about the possible
+# configuration settings see the README file.
+
+SYSLOGON="always"
+DEBUG="verbose"
+
+MAILON=""
+
+APTCOMMAND=/usr/bin/apt
+
+OPTIONS="-o quiet=1 -o Dir::Etc::SourceList=/etc/apt/security.sources.list"

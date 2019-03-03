@@ -1,0 +1,6 @@
+MAILTO=""
+
+DOCKER=/usr/bin/docker
+
+0 13 * * *    root ${DOCKER} image prune -f
+0 23 * * *    root ${DOCKER} container prune -f

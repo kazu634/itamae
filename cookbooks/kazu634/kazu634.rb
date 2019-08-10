@@ -7,7 +7,7 @@ user 'kazu634' do
   create_home true
   home HOME
 
-  shell '/bin/zsh'
+  shell '/usr/bin/zsh'
 end
 
 # Create directories:

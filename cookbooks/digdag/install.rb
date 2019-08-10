@@ -26,8 +26,12 @@ link '/usr/local/bin/digdag' do
 end
 
 # Install the Java Runtime:
-%w(nkf default-jre).each do |p|
+%w(nkf openjdk-8-jdk).each do |p|
   package p do
     action :install
   end
+end
+
+execute 'update-java-alternatives -s java-1.8.0-openjdk-amd64' do
+  user 'root'
 end

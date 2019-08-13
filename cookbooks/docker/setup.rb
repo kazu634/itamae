@@ -1,9 +1,11 @@
 # install `cifs-utils`
 package 'cifs-utils'
 
-directory '/mnt/backup/' do
-  owner 'root'
-  group 'root'
+%w( /mnt/backup /var/spool/apt-mirror ).each do |d|
+  directory d do
+    owner 'root'
+    group 'root'
+  end
 end
 
 # Add the fstab entry:

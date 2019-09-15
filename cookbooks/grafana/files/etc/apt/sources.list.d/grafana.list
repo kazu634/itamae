@@ -1,1 +1,2 @@
-deb https://packagecloud.io/grafana/stable/debian/ jessie main
+deb https://packages.grafana.com/oss/deb stable main
+# deb-src https://packages.grafana.com/oss/deb stable main

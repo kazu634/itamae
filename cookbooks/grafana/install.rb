@@ -6,8 +6,8 @@ remote_file '/etc/apt/sources.list.d/grafana.list' do
 end
 
 # Load APT key:
-execute 'curl https://packagecloud.io/gpg.key | apt-key add -' do
-  not_if 'apt-key list | grep packagecloud'
+execute 'curl https://packages.grafana.com/gpg.key | apt-key add -' do
+  not_if 'apt-key list | grep grafana'
 end
 
 execute 'apt update'

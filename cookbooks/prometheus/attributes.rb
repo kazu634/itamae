@@ -23,5 +23,12 @@ node.reverse_merge!({
     'postfix' => '.linux-amd64.tar.gz',
     'storage' => '/opt/blackbox_exporter/bin/',
     'location' => '/usr/local/bin/'
-  }
+  },
+  'alertmanager' => {
+    'url' => 'https://github.com/prometheus/alertmanager/releases/download/',
+    'prefix' => 'alertmanager-',
+    'postfix' => '.linux-amd64.tar.gz',
+    'storage' => '/opt/prometheus/',
+    'location' => '/usr/local/bin/'
+  },
 })

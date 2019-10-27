@@ -73,7 +73,7 @@ directory MODULEDIR do
 end
 
 # Build starts here:
-execute "#{NGINXBUILD} -d working -v #{version} -c configure.sh -zlib -pcre -openssl" do
+execute "#{NGINXBUILD} -d working -v #{version} -c configure.sh -zlib -pcre -openssl -opensslversion=1.1.1d" do
   cwd WORKDIR
   user USER
 

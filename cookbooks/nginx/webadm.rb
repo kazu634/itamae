@@ -30,7 +30,7 @@ encrypted_remote_file '/home/webadm/.ssh/authorized_keys' do
 end
 
 # Deploy secret keys
-%w( id_rsa.github id_rsa.bitbucket id_rsa.chef ).each do |conf|
+%w( id_rsa.github id_rsa.chef ).each do |conf|
   encrypted_remote_file "/home/webadm/.ssh/#{conf}" do
     owner 'webadm'
     group 'webadm'

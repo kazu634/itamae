@@ -14,4 +14,4 @@ include_recipe './build.rb'
 include_recipe './setup.rb'
 
 # Install Let's Encrypt:
-include_recipe './letsencrypt.rb'
+include_recipe './lego.rb'

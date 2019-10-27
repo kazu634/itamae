@@ -39,11 +39,3 @@ end
     password ENV['ITAMAE_PASSWORD']
   end
 end
-
-# Create `/home/webadm/bin` directory:
-directory '/home/webadm/bin' do
-  owner 'webadm'
-  group 'webadm'
-  mode '755'
-end
-

@@ -7,7 +7,7 @@
   end
 end
 
-%w( sites-available sites-enabled ).each do |d|
+%w( sites-available sites-enabled stream-available stream-enabled).each do |d|
   directory "/etc/nginx/#{d}" do
     owner 'root'
     group 'root'
@@ -20,7 +20,7 @@ remote_file '/etc/nginx/nginx.conf' do
   owner 'root'
   group 'root'
   mode '644'
-  
+
   notifies :reload, 'service[nginx]'
 end
 

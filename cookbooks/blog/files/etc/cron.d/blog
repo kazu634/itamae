@@ -1,2 +1,1 @@
 @reboot webadm cp -pr /home/webadm/works/public/* /var/www/blog/
-12 3 * * * root openssl rand 48 > /etc/letsencrypt/live/blog.kazu634.com/ticket.key

@@ -22,6 +22,12 @@ execute 'mount -a' do
   action :nothing
 end
 
+remote_file '/etc/cron.d/blog' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
 # Add monit configuration file for monitoring nginx logs:
 remote_file '/etc/monit/conf.d/blog-log.conf' do
   owner 'root'

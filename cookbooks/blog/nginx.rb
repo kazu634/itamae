@@ -1,29 +1,3 @@
-# Deploy the nginx configuration file:
-remote_file '/etc/nginx/sites-available/blog' do
-  owner 'root'
-  group 'root'
-  mode '644'
-end
-
-# Deploy cron tab configuration for nginx
-remote_file '/etc/cron.d/blog' do
-  owner 'root'
-  group 'root'
-  mode '644'
-end
-
-# Create link:
-link '/etc/nginx/sites-enabled/blog' do
-  user 'root'
-  to '/etc/nginx/sites-available/blog'
-
-  notifies :restart, 'service[nginx]'
-end
-
-service 'nginx' do
-  action :nothing
-end
-
 # Create the nginx directory:
 directory '/var/www/blog' do
   owner 'www-data'

@@ -30,20 +30,6 @@ remote_file '/etc/nginx/nginx.conf' do
   notifies :reload, 'service[nginx]'
 end
 
-%w( default maintenance ).each do |conf|
-  remote_file "/etc/nginx/sites-available/#{conf}" do
-    owner 'root'
-    group 'root'
-    mode '644'
-  end
-end
-
-link '/etc/nginx/sites-enabled/default' do
-  to '/etc/nginx/sites-available/default'
-
-  notifies :reload, 'service[nginx]'
-end
-
 # Log rotation setting:
 remote_file '/etc/logrotate.d/nginx' do
   owner 'root'

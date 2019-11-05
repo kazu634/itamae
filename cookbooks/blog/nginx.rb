@@ -15,7 +15,7 @@ file '/etc/fstab' do
 
   not_if 'grep /var/www/blog /etc/fstab'
 
-  notifies :run, 'execute[fstab -a]'
+  notifies :run, 'execute[mount -a]'
 end
 
 execute 'mount -a' do

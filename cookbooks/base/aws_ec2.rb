@@ -1,12 +1,11 @@
 # Make swap file:
 [
-  'dd if=/dev/zero of=/swap.img bs=1M count=2048 && chomod 600 /swap.img',
-  'mkswap /swap.img'
+  'dd if=/dev/zero of=/swap.img bs=1M count=2048 && chmod 600 /swap.img && mkswap /swap.img'
 ].each do |cmd|
   execute cmd do
     user 'root'
 
-    only_if 'test ! -f /swap.img -a `cat /proc/swaps | wc -l` -eq 1'
+    only_if 'test ! -f /swap.img'
   end
 end
 

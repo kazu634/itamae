@@ -15,7 +15,7 @@ file '/etc/fstab' do
 
   not_if 'grep /var/www/blog /etc/fstab'
 
-  notifies :run, 'execute[fstab -a]'
+  notifies :run, 'execute[mount -a]'
 end
 
 execute 'mount -a' do
@@ -41,3 +41,9 @@ service 'monit' do
   action :nothing
 end
 
+# Create storage directory for blog data
+directory '/home/webadm/works/public' do
+  owner 'webadm'
+  group 'webadm'
+  mode '775'
+end

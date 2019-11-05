@@ -7,12 +7,18 @@
   end
 end
 
-%w( sites-available sites-enabled stream-available stream-enabled).each do |d|
-  directory "/etc/nginx/#{d}" do
-    owner 'root'
-    group 'root'
-    mode '755'
-  end
+link '/etc/nginx/sites-enabled' do
+  to '/home/webadm/repo/nginx-config/sites-available'
+  user 'root'
+
+  notifies :reload, 'service[nginx]'
+end
+
+link '/etc/nginx/stream-enabled' do
+  to '/home/webadm/repo/nginx-config/stream-available'
+  user 'root'
+
+  notifies :reload, 'service[nginx]'
 end
 
 # Deploy the nginx configuration files:
@@ -20,20 +26,6 @@ remote_file '/etc/nginx/nginx.conf' do
   owner 'root'
   group 'root'
   mode '644'
-
-  notifies :reload, 'service[nginx]'
-end
-
-%w( default maintenance ).each do |conf|
-  remote_file "/etc/nginx/sites-available/#{conf}" do
-    owner 'root'
-    group 'root'
-    mode '644'
-  end
-end
-
-link '/etc/nginx/sites-enabled/default' do
-  to '/etc/nginx/sites-available/default'
 
   notifies :reload, 'service[nginx]'
 end

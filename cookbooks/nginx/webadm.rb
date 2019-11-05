@@ -39,3 +39,10 @@ end
     password ENV['ITAMAE_PASSWORD']
   end
 end
+
+# Create `repo` directory:
+git '/home/webadm/repo/nginx-config' do
+  user 'webadm'
+  repository 'https://gitea.kazu634.com/kazu634/nginx-config.git'
+end
+

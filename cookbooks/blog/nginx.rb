@@ -41,3 +41,9 @@ service 'monit' do
   action :nothing
 end
 
+# Create storage directory for blog data
+directory '/home/webadm/works/public' do
+  owner 'webadm'
+  group 'webadm'
+  mode '775'
+end

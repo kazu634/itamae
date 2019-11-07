@@ -2,6 +2,7 @@
 # Calculating the latest `consul-template` version:
 # -------------------------------------------
 download_url = ''
+tag_version  = ''
 
 begin
   require 'net/http'
@@ -26,22 +27,26 @@ end
 # Main Part
 # -------------------------------------------
 
-# Download:
-execute "wget #{download_url} -O #{node['consul-template']['tmp_path']}"
+# バージョン確認して、アップデート必要かどうか確認
+result = run_command("consul-template --version 2>&1 | grep #{tag_version}", error: false)
+if result.exit_status != 0
+  # Download:
+  execute "wget #{download_url} -O #{node['consul-template']['tmp_path']}"
 
-# Unzip:
-execute "unzip -qo #{node['consul-template']['tmp_path']}" do
-  cwd '/opt/consul/bin/'
-end
+  # Unzip:
+  execute "unzip -qo #{node['consul-template']['tmp_path']}" do
+    cwd '/opt/consul/bin/'
+  end
 
-file '/opt/consul/bin/consul-template' do
-  owner 'root'
-  group 'root'
-  mode '755'
-end
+  file '/opt/consul/bin/consul-template' do
+    owner 'root'
+    group 'root'
+    mode '755'
+  end
 
-# Create link:
-link '/usr/local/bin/consul-template' do
-  user 'root'
-  to '/opt/consul/bin/consul-template'
+  # Create link:
+  link '/usr/local/bin/consul-template' do
+    user 'root'
+    to '/opt/consul/bin/consul-template'
+  end
 end

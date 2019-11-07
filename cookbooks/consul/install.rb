@@ -2,6 +2,7 @@
 # Calculating the latest `consul` version:
 # -------------------------------------------
 download_url = ''
+tag_version  = ''
 
 begin
   require 'net/http'
@@ -26,22 +27,27 @@ end
 # Main Part
 # -------------------------------------------
 
-# Download:
-execute "wget #{download_url} -O #{node['consul']['tmp_path']}"
+# バージョン確認して、アップデート必要かどうか確認
+result = run_command("consul version | grep #{tag_version}", error: false)
+if result.exit_status != 0
+  # Download:
+  execute "wget #{download_url} -O #{node['consul']['tmp_path']}"
 
-# Unzip:
-execute "unzip -qo #{node['consul']['tmp_path']}" do
-  cwd '/opt/consul/bin/'
+  # Unzip:
+  execute "unzip -qo #{node['consul']['tmp_path']}" do
+    cwd '/opt/consul/bin/'
+  end
+
+  file '/opt/consul/bin/consul' do
+    owner 'root'
+    group 'root'
+    mode '755'
+  end
+
+  # Create link:
+  link '/usr/local/bin/consul' do
+    user 'root'
+    to '/opt/consul/bin/consul'
+  end
 end
 
-file '/opt/consul/bin/consul' do
-  owner 'root'
-  group 'root'
-  mode '755'
-end
-
-# Create link:
-link '/usr/local/bin/consul' do
-  user 'root'
-  to '/opt/consul/bin/consul'
-end

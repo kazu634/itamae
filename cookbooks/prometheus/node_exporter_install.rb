@@ -1,6 +1,9 @@
 node_exporter_url = ''
 node_exporter_bin = ''
 
+tag               = ''
+vtag              = ''
+
 # Calculate the Download URL:
 begin
   require 'net/http'
@@ -21,28 +24,32 @@ rescue
   raise 'Cannot connect to http://github.com.'
 end
 
-# Download:
-TMP = "/tmp/#{node_exporter_bin}"
+# バージョン確認して、アップデート必要かどうか確認
+result = run_command("node_exporter --version 2>&1 | grep #{tag}", error: false)
+if result.exit_status != 0
+  # Download:
+  TMP = "/tmp/#{node_exporter_bin}"
 
-execute "wget #{node_exporter_url} -O #{TMP}"
+  execute "wget #{node_exporter_url} -O #{TMP}"
 
-# Install:
-directory node['node_exporter']['storage'] do
-  owner 'root'
-  group 'root'
-  mode '755'
-end
+  # Install:
+  directory node['node_exporter']['storage'] do
+    owner 'root'
+    group 'root'
+    mode '755'
+  end
 
-execute "tar zxf #{TMP} -C #{node['node_exporter']['storage']} --strip-components 1"
+  execute "tar zxf #{TMP} -C #{node['node_exporter']['storage']} --strip-components 1"
 
-# Change Owner and Permissions:
-file "#{node['node_exporter']['storage']}node_exporter" do
-  owner 'root'
-  group 'root'
-  mode  '755'
-end
+  # Change Owner and Permissions:
+  file "#{node['node_exporter']['storage']}node_exporter" do
+    owner 'root'
+    group 'root'
+    mode  '755'
+  end
 
-# Create Link
-link "#{node['node_exporter']['location']}node_exporter" do
-  to "#{node['node_exporter']['storage']}node_exporter"
+  # Create Link
+  link "#{node['node_exporter']['location']}node_exporter" do
+    to "#{node['node_exporter']['storage']}node_exporter"
+  end
 end

@@ -50,12 +50,17 @@ rescue
   raise 'Cannot connect to http://github.com.'
 end
 
-# Download `nginx-build`:
-execute "wget #{nginxbuild} -O #{TARBALL}"
 
-execute "tar xf #{TARBALL} && chown webadm:webadm #{NGINXBUILD}" do
-  user USER
-  cwd WORKDIR
+# バージョン確認して、アップデート必要かどうか確認
+result = run_command("/home/webadm/nginx-build/nginx-build --version | grep #{tag_version}", error: false)
+if result.exit_status != 0
+  # Download `nginx-build`:
+  execute "wget #{nginxbuild} -O #{TARBALL}"
+
+  execute "tar xf #{TARBALL} && chown webadm:webadm #{NGINXBUILD}" do
+    user USER
+    cwd WORKDIR
+  end
 end
 
 # Deploy `configure.sh`:

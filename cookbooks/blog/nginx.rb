@@ -1,8 +1,10 @@
 # Create the nginx directory:
-directory '/var/www/blog' do
-  owner 'www-data'
-  group 'webadm'
-  mode '770'
+%w( blog test ).each do |d|
+  directory "/var/www/#{d}" do
+    owner 'www-data'
+    group 'webadm'
+    mode '770'
+  end
 end
 
 # Add the fstab entry:

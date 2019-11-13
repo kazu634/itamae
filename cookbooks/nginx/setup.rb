@@ -22,12 +22,14 @@ link '/etc/nginx/stream-enabled' do
 end
 
 # Deploy the nginx configuration files:
-remote_file '/etc/nginx/nginx.conf' do
-  owner 'root'
-  group 'root'
-  mode '644'
+%w(nginx.conf basic-auth).each do |f|
+  remote_file "/etc/nginx/#{f}" do
+    owner 'root'
+    group 'root'
+    mode '644'
 
-  notifies :reload, 'service[nginx]'
+    notifies :reload, 'service[nginx]'
+  end
 end
 
 # Log rotation setting:

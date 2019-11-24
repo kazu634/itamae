@@ -1,9 +1,0 @@
-{
-  "check": {
-    "id": "swap-capacity",
-    "name": "Check for Swap Capacity",
-    "args": ["/usr/lib/nagios/plugins/check_swap", "-a", "-w", "50%", "-c", "25%", "-n", "ok"],
-    "interval": "300s",
-    "timeout": "10s"
-  }
-}

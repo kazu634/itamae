@@ -1,9 +1,0 @@
-{
-  "check": {
-    "id": "load-average",
-    "name": "Check for Load Average",
-    "args": ["/usr/lib/nagios/plugins/check_load", "-r", "--warning=1,1,1", "--critical=2,2,2"],
-    "interval": "60s",
-    "timeout": "10s"
-  }
-}

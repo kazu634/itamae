@@ -1,9 +1,0 @@
-{
-  "check": {
-    "id": "disk-capacity",
-    "name": "Check for Disk Capacity",
-    "args": ["/usr/lib/nagios/plugins/check_disk", "-w", "25%", "-c", "10%", "-p", "/"],
-    "interval": "3600s",
-    "timeout": "10s"
-  }
-}

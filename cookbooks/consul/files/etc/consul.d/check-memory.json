@@ -1,9 +1,0 @@
-{
-  "check": {
-    "id": "memory",
-    "name": "Check for Memory",
-    "args": ["/usr/lib/nagios/plugins/check_memory"],
-    "interval": "60s",
-    "timeout": "10s"
-  }
-}

@@ -1,5 +1,5 @@
 # listen: Addr and port to listen (required)
-listen: "0.0.0.0:9099"
+listen: "0.0.0.0:60000"
 
 # access_log (optional)
 access_log:

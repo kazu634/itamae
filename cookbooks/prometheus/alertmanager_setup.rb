@@ -17,12 +17,14 @@ remote_file '/etc/prometheus.d/alertmanager.yml' do
 end
 
 # Deploy alert setting file:
-remote_file '/etc/prometheus.d/alerts/resource.yml' do
-  owner  'root'
-  group  'root'
-  mode   '644'
+%w(node_exporter prometheus).each do |conf|
+  remote_file "/etc/prometheus.d/alerts/#{conf}.yml" do
+    owner  'root'
+    group  'root'
+    mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+    notifies :restart, 'service[supervisor]'
+  end
 end
 
 # Restart the `supervisor`:

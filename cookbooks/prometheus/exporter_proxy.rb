@@ -42,7 +42,7 @@ service 'supervisor' do
 end
 
 # Firewall settings here:
-%w( 9099/tcp ).each do |p|
+%w( 60000/tcp ).each do |p|
   execute "ufw allow #{p}" do
     user 'root'
 

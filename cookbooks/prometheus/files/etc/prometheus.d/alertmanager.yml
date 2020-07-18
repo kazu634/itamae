@@ -1,0 +1,17 @@
+global:
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
+route:
+  receiver: 'test-route'
+  group_by: [alertname]
+  group_wait:      10s
+  group_interval:  1m
+  repeat_interval: 6h
+
+receivers:
+- name: 'test-route'
+  slack_configs:
+  - channel: '#ops'
+    title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+    text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
+    send_resolved: true

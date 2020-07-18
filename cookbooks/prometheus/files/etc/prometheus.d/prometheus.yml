@@ -38,11 +38,6 @@ scrape_configs:
       - files:
         - '/etc/prometheus.d/targets/targets.yml'
 
-  - job_name: 'statup'
-    metrics_path: /statup_exporter/metrics
-    bearer_token: 'e351393306ea245de5f9588cbe8627c74db007c6'
-    static_configs:
-      - targets: ['10.0.1.234:9099']
 alerting:
   alertmanagers:
     - static_configs:

@@ -2,7 +2,7 @@
 execute 'apt update'
 
 # Install the necessary packages:
-%w[build-essential zsh vim-nox debian-keyring screen curl dstat].each do |pkg|
+%w[build-essential zsh vim-nox debian-keyring screen curl dstat direnv].each do |pkg|
   package pkg
 end
 

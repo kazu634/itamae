@@ -1,0 +1,186 @@
+server:
+  disable: true
+
+positions:
+  filename: /var/opt/promtail/promtail_base_position.yaml
+
+clients:
+  - url: http://<%= @LOKIENDPOINT %>/loki/api/v1/push
+
+scrape_configs:
+  - job_name: apt
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: apt
+        hostname: <%= @HOSTNAME %>
+        level: notice
+        __path__: /var/log/apt/history.log
+
+  - job_name: sudo
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: sudo
+        hostname: <%= @HOSTNAME %>
+        level: notice
+        __path__: /var/log/auth.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="sudo"}'
+        stages:
+        - drop:
+            expression: (CRON|sshd|session)
+        - regex:
+            expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: Jan 2 15:04:05
+            location: Asia/Tokyo
+
+        - template:
+            source: message
+            template: 'USER={{ .user }} PWD={{ .pwd }} CMD={{ .cmd }}'
+
+        - output:
+            source: message
+
+  - job_name: sshd
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: sshd
+        hostname: <%= @HOSTNAME %>
+        level: warning
+        __path__: /var/log/auth.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="sshd"}'
+
+        stages:
+        - drop:
+            expression: (CRON|sudo)
+
+        - regex:
+            expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^:]+: (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: Jan 2 15:04:05
+            location: Asia/Tokyo
+
+        - output:
+            source: message
+
+  - job_name: supervisord
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: supervisord
+        hostname: <%= @HOSTNAME %>
+        level: notice
+        __path__: /var/log/supervisor/supervisord.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="supervisord"}'
+        stages:
+        - regex:
+            expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+),[0-9]+ (?P<level>[^ ]+) (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02 15:04:05
+            location: Asia/Tokyo
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "warn" .Value "warning" }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "crit" .Value "critical" }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message
+
+  - job_name: fail2ban
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: fail2ban
+        hostname: <%= @HOSTNAME %>
+        level: notice
+        __path__: /var/log/fail2ban.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="fail2ban"}'
+        stages:
+        - regex:
+            expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+),[0-9]+ [^:]+: (?P<level>[^ ]+)[^\[]+(?P<message>.+)$'
+
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02 15:04:05
+            location: Asia/Tokyo
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message
+
+  - job_name: promtail
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: promtail
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/promtail.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="promtail"}'
+        stages:
+        - regex:
+            expression: '^[^ ]+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ promtail[^ ]+ .*ts=(?P<timestamp>[^ ]+) (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.999999999Z
+            location: Etc/GMT
+
+        - regex:
+            expression: '^[^ ]+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ promtail[^ ]+ .*level=(?P<level>[^\\" ]+).*$'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "warn" .Value "warning" }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message

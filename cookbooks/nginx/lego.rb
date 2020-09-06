@@ -68,6 +68,7 @@ if result.exit_status != 0
   link '/usr/local/bin/lego' do
     user 'root'
     to LEGO
+    force true
   end
 end
 

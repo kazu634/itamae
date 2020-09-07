@@ -1,0 +1,56 @@
+server:
+  disable: true
+
+positions:
+  filename: /var/opt/promtail/promtail_digdag_position.yaml
+
+
+clients:
+  - url: http://<%= @LOKIENDPOINT %>/loki/api/v1/push
+
+scrape_configs:
+  - job_name: digdag
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: digdag
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/supervisor/digdag.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="digdag"}'
+
+        stages:
+        - drop:
+            expression: ^[^0-9]
+
+        - drop:
+            expression: ^[0-9\/]+ .*$
+
+        - regex:
+            expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+ [\+\-][0-9]+)[ :]+(\[(?P<level>[^\])]+)\] (?P<message1>[^ ]+) [^ ]+ (?P<message2>.+))$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02 15:04:05 -0700
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "warn" .Value "warning" }}'
+
+        - template:
+            source: message
+            template: '{{ if .message1 }} {{ .message1 }} {{ .message2 }} {{ else }} Digdag has started {{ end }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message
+

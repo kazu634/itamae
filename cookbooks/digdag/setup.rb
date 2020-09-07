@@ -48,3 +48,26 @@ end
 service 'supervisor' do
   action :nothing
 end
+
+# Deploy /etc/hosts file:
+HOSTNAME = run_command('uname -n').stdout.chomp
+
+template '/etc/promtail/digdag.yaml' do
+  owner 'root'
+    group 'root'
+      mode '644'
+
+  variables(HOSTNAME: HOSTNAME, LOKIENDPOINT: node['promtail']['lokiendpoint'])
+  end
+
+# Deploy the `systemd` configuration:
+remote_file '/lib/systemd/system/promtail-digdag.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+# Service setting:
+service 'promtail-digdag' do
+  action [ :enable, :restart ]
+end

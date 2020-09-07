@@ -1,0 +1,12 @@
+[Unit]
+Description=Grafana Promtail (Digdag)
+Documentation=https://github.com/grafana/loki
+After=network-online.target
+
+[Service]
+User=root
+Restart=always
+ExecStart=/usr/local/bin/promtail --config.file=/etc/promtail/digdag.yaml
+
+[Install]
+WantedBy=multi-user.target

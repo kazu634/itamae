@@ -15,3 +15,7 @@ receivers:
     title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
     text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
     send_resolved: true
+
+  webhook_configs:
+  - send_resolved: true
+    url: 'http://localhost:6725'

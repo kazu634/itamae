@@ -8,6 +8,8 @@ if node['prometheus']['manager']
 
   include_recipe './alertmanager_install.rb'
   include_recipe './alertmanager_setup.rb'
+
+  include_recipe './alertmanager_webhook_install.rb'
 end
 
 # Install the node_exporter here:

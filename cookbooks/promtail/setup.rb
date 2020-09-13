@@ -16,6 +16,8 @@ template '/etc/promtail/base.yaml' do
   mode '644'
 
   variables(HOSTNAME: HOSTNAME, LOKIENDPOINT: node['promtail']['lokiendpoint'])
+
+  notifies :restart, 'service[promtail-base]'
 end
 
 # Deploy the `systemd` configuration:

@@ -56,7 +56,7 @@ scrape_configs:
       labels:
         job: sshd
         hostname: <%= @HOSTNAME %>
-        level: warning
+        level: info
         __path__: /var/log/auth.log
 
     pipeline_stages:
@@ -184,3 +184,40 @@ scrape_configs:
 
         - output:
             source: message
+
+  - job_name: login
+    journal:
+      json: false
+      max_age: 12h
+      path: /var/log/journal
+      labels:
+        job: login
+        level: notice
+        hostname: <%= @HOSTNAME %>
+
+    relabel_configs:
+      - action: keep
+        regex: 'systemd-logind.service'
+        source_labels:
+        - __journal__systemd_unit
+
+  - job_name: systemd
+    journal:
+      json: false
+      max_age: 12h
+      path: /var/log/journal
+      labels:
+        job: systemd
+        level: info
+        hostname: <%= @HOSTNAME %>
+
+    relabel_configs:
+      - action: keep
+        regex: '.*\.service'
+        source_labels:
+        - __journal__systemd_unit
+
+      - action: drop
+        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind).*'
+        source_labels:
+        - __journal__systemd_unit

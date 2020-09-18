@@ -1,0 +1,110 @@
+server:
+  disable: true
+
+positions:
+  filename: /var/opt/promtail/promtail_prometheus_position.yaml
+
+clients:
+  - url: http://192.168.10.118:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: prometheus
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/supervisor/prometheus.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="prometheus"}'
+        stages:
+        - drop:
+            expression: "^[^l]"
+
+        - regex:
+            expression: '^level=(?P<level>[^ ]+) ts=(?P<timestamp>[^ ]+) (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.999Z
+            location: Etc/UTC
+
+        - labels:
+            level: 
+
+        - output:
+            source: message
+
+  - job_name: alertmanager
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: prometheus
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/supervisor/alertmanager.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="prometheus"}'
+        stages:
+        - drop:
+            expression: "^[^l]"
+
+        - regex:
+            expression: '^level=(?P<level>[^ ]+) ts=(?P<timestamp>[^ ]+) (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.999Z
+            location: Etc/UTC
+
+        - labels:
+            level: 
+
+        - output:
+            source: message
+
+  - job_name: alertmanager-webhook-logger
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: prometheus
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/supervisor/alertmanager-webhook-logger.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="prometheus"}'
+        stages:
+        - drop:
+            expression: "^[0-9]+"
+
+        - json:
+            expressions:
+              timestamp: timestamp
+              message: description
+              level: status
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.999999999Z
+            location: Etc/UTC
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "firing" .Value "error" }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "resolved" .Value "notice" }}'
+
+        - labels:
+            level: 
+
+        - output:
+            source: message

@@ -208,8 +208,28 @@ scrape_configs:
       path: /var/log/journal
       labels:
         job: init
-        level: notice
         hostname: <%= @HOSTNAME %>
+
+    pipeline_stages:
+    - match:
+        selector: '{job="init"} |~ "(apt download|Message of the Day)"'
+        stages:
+        - template:
+            source: level
+            template: 'info'
+
+        - labels:
+            level:
+
+    - match:
+        selector: '{job="init"} !~ "(apt download|Message of the Day)"'
+        stages:
+        - template:
+            source: level
+            template: 'notice'
+
+        - labels:
+            level:
 
     relabel_configs:
       - action: keep
@@ -229,10 +249,35 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="systemd"}'
+        selector: '{job="systemd"} !~ "temperature"'
         stages:
         - drop:
             expression: (CMD|UFW|session|TTY)
+
+    - match:
+        selector: '{job="systemd"} |~ "temperature"'
+
+        stages:
+        - regex:
+            expression: '^(?P<message>.+)$'
+
+        - template:
+            source: level
+            template: '{{ .message }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral ".*normal.*" .Value "notice" }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral ".*temperature.*" .Value "error" }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message
 
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']

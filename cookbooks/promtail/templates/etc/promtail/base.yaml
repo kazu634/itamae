@@ -201,6 +201,22 @@ scrape_configs:
         source_labels:
         - __journal__systemd_unit
 
+  - job_name: init
+    journal:
+      json: false
+      max_age: 12h
+      path: /var/log/journal
+      labels:
+        job: init
+        level: notice
+        hostname: <%= @HOSTNAME %>
+
+    relabel_configs:
+      - action: keep
+        regex: 'init\.scope'
+        source_labels:
+        - __journal__systemd_unit
+
   - job_name: systemd
     journal:
       json: false
@@ -211,13 +227,18 @@ scrape_configs:
         level: info
         hostname: <%= @HOSTNAME %>
 
+    pipeline_stages:
+    - match:
+        selector: '{job="systemd"}'
+        stages:
+        - drop:
+            expression: (CMD|UFW|session|TTY)
+
     relabel_configs:
-      - action: keep
-        regex: '.*\.service'
-        source_labels:
-        - __journal__systemd_unit
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
 
       - action: drop
-        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind).*'
+        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind|init|session|loki|monit).*'
         source_labels:
         - __journal__systemd_unit

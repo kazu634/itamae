@@ -242,3 +242,41 @@ scrape_configs:
         regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind|init|session|loki|monit).*'
         source_labels:
         - __journal__systemd_unit
+
+  - job_name: consul
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: consul
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/supervisor/consul.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="consul"}'
+        stages:
+        - regex:
+            expression: '^ +(?P<timestamp>\d+-\d+-[^T]+T\d+:\d+:\d+\.\d+\+\d+) \[(?P<level>[^\]]+)\] (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.000-0700
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "warn" .Value "warning" }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "crit" .Value "critical" }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message

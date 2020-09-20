@@ -208,8 +208,28 @@ scrape_configs:
       path: /var/log/journal
       labels:
         job: init
-        level: notice
         hostname: <%= @HOSTNAME %>
+
+    pipeline_stages:
+    - match:
+        selector: '{job="init"} |~ "(apt download|Message of the Day)"'
+        stages:
+        - template:
+            source: level
+            template: 'info'
+
+        - labels:
+            level:
+
+    - match:
+        selector: '{job="init"} !~ "(apt download|Message of the Day)"'
+        stages:
+        - template:
+            source: level
+            template: 'notice'
+
+        - labels:
+            level:
 
     relabel_configs:
       - action: keep

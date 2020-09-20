@@ -25,12 +25,11 @@ scrape_configs:
       labels:
         job: sudo
         hostname: <%= @HOSTNAME %>
-        level: notice
         __path__: /var/log/auth.log
 
     pipeline_stages:
     - match:
-        selector: '{job="sudo"}'
+        selector: '{job="sudo"} |~ "/bin/sh"'
         stages:
         - drop:
             expression: (CRON|sshd|session)
@@ -45,6 +44,40 @@ scrape_configs:
         - template:
             source: message
             template: 'USER={{ .user }} PWD={{ .pwd }} CMD={{ .cmd }}'
+
+        - template:
+            source: level
+            template: 'info'
+
+        - labels:
+            level:
+
+        - output:
+            source: message
+
+    - match:
+        selector: '{job="sudo"} !~ "/bin/sh"'
+        stages:
+        - drop:
+            expression: (CRON|sshd|session)
+        - regex:
+            expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: Jan 2 15:04:05
+            location: Asia/Tokyo
+
+        - template:
+            source: message
+            template: 'USER={{ .user }} PWD={{ .pwd }} CMD={{ .cmd }}'
+
+        - template:
+            source: level
+            template: 'notice'
+
+        - labels:
+            level:
 
         - output:
             source: message

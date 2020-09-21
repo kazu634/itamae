@@ -2,7 +2,7 @@
   "check": {
     "id": "reboot-required",
     "name": "Check for Reboot Required",
-    "args": ["/usr/lib/nagios/plugins/check_file", "/var/run/reboot-required"],
+    "args": ["/usr/local/bin/check_file", "/var/run/reboot-required"],
     "interval": "86400s",
     "timeout": "10s"
   }

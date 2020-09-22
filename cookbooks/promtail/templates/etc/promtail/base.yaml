@@ -328,6 +328,7 @@ scrape_configs:
       labels:
         job: consul
         hostname: <%= @HOSTNAME %>
+        level: info
         __path__: /var/log/supervisor/consul.log
 
     pipeline_stages:
@@ -335,7 +336,7 @@ scrape_configs:
         selector: '{job="consul"}'
         stages:
         - regex:
-            expression: '^ +(?P<timestamp>\d+-\d+-[^T]+T\d+:\d+:\d+\.\d+\+\d+) \[(?P<level>[^\]]+)\] (?P<message>.+)$'
+            expression: '^ +(?P<timestamp>\d+-\d+-[^T]+T\d+:\d+:\d+\.\d+\+\d+) \[(?P<level>[^\]]+)\] *(?P<message>.+)$'
 
         - timestamp:
             source: timestamp

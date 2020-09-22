@@ -245,7 +245,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="init"} |~ "(apt download|Message of the Day)"'
+        selector: '{job="init"} |~ "(apt|Message of the Day|Temporary Directories)"'
         stages:
         - template:
             source: level
@@ -255,7 +255,7 @@ scrape_configs:
             level:
 
     - match:
-        selector: '{job="init"} !~ "(apt download|Message of the Day)"'
+        selector: '{job="init"} !~ "(apt|Message of the Day|Temporary Directories)"'
         stages:
         - template:
             source: level

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+TARGET=$1
+
+if [ -f ${TARGET} ]; then
+  exit 1
+fi
+
+exit 0

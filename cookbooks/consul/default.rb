@@ -7,5 +7,3 @@ include_recipe './install.rb'
 include_recipe './setup.rb'
 
 include_recipe './dnsmasq.rb'
-
-include_recipe './monitoring.rb'

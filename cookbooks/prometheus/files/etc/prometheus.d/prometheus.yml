@@ -44,14 +44,12 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'node'
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
     metrics_path: /node_exporter/metrics
 
-    file_sd_configs:
-      - files:
-        - '/etc/prometheus.d/targets/targets.yml'
+    consul_sd_configs:
+    - server: 'localhost:8500'
+      services:
+        - 'node_exporter'
 
 alerting:
   alertmanagers:

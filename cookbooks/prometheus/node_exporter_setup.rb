@@ -7,6 +7,15 @@ remote_file '/etc/supervisor/conf.d/node_exporter.conf' do
   notifies :restart, 'service[supervisor]'
 end
 
+# Deploy `consul` config for `node_exporter`:
+remote_file '/etc/consul.d/service-node_exporter.json' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  notifies :restart, 'service[supervisor]'
+end
+
 service 'supervisor' do
   action :nothing
 end

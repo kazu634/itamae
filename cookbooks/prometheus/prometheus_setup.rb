@@ -21,22 +21,6 @@ remote_file '/etc/prometheus.d/targets/targets.yml' do
   mode   '644'
 end
 
-# Deploy template file for `consul-template` generating `prometheus` target file:
-remote_file '/etc/consul-template.d/prometheus-targets.tmpl' do
-  owner  'root'
-  group  'root'
-  mode   '644'
-end
-
-# Deploy `supervisor` configuration for `prometheus-targets`, genarating `prometheus` targets:
-remote_file '/etc/supervisor/conf.d/prometheus-targets.conf' do
-  owner  'root'
-  group  'root'
-  mode   '644'
-
-  notifies :restart, 'service[supervisor]'
-end
-
 # Deploy `supervisor` configuration for `prometheus`:
 remote_file '/etc/supervisor/conf.d/prometheus.conf' do
   owner  'root'

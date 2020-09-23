@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "node_exporter",
+    "port": 60000
+  }
+}

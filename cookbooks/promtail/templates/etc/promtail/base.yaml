@@ -163,7 +163,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="fail2ban"}'
+        selector: '{job="fail2ban"} !~ "already banned"'
         stages:
         - regex:
             expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+),[0-9]+ [^:]+: (?P<level>[^ ]+)[^\[]+(?P<message>.+)$'

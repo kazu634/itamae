@@ -1,5 +1,5 @@
 # Create `/etc/prometheus.d/`:
-%w(/etc/prometheus.d /etc/prometheus.d/targets/).each do |d|
+%w(/etc/prometheus.d).each do |d|
   directory d do
     owner  'root'
     group  'root'
@@ -9,13 +9,6 @@ end
 
 # Deploy `prometheus` files:
 remote_file '/etc/prometheus.d/prometheus.yml' do
-  owner  'root'
-  group  'root'
-  mode   '644'
-end
-
-# Deploy temporary file for `prometheus` targets:
-remote_file '/etc/prometheus.d/targets/targets.yml' do
   owner  'root'
   group  'root'
   mode   '644'

@@ -282,10 +282,20 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="systemd"} !~ "temperature"'
+        selector: '{job="systemd"} !~ "(temperature|nf_conntrack)"'
         stages:
         - drop:
             expression: (CMD|UFW|session|TTY)
+
+    - match:
+        selector: '{job="systemd"} |~ "nf_conntrack"'
+        stages:
+        - template:
+            source: level
+            template: 'error'
+
+        - labels:
+            level:
 
     - match:
         selector: '{job="systemd"} |~ "temperature"'

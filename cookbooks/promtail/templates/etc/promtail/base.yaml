@@ -158,7 +158,7 @@ scrape_configs:
       labels:
         job: fail2ban
         hostname: <%= @HOSTNAME %>
-        level: notice
+        level: info
         __path__: /var/log/fail2ban.log
 
     pipeline_stages:
@@ -167,7 +167,6 @@ scrape_configs:
         stages:
         - regex:
             expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+),[0-9]+ [^:]+: (?P<level>[^ ]+)[^\[]+(?P<message>.+)$'
-
 
         - timestamp:
             source: timestamp
@@ -180,6 +179,20 @@ scrape_configs:
 
         - labels:
             level:
+
+        - output:
+            source: message
+
+    - match:
+        selector: '{job="fail2ban"} |~ "already banned"'
+        stages:
+        - regex:
+            expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+),[0-9]+ [^:]+: (?P<level>[^ ]+)[^\[]+(?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02 15:04:05
+            location: Asia/Tokyo
 
         - output:
             source: message

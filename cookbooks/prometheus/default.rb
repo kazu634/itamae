@@ -51,4 +51,8 @@ end
 include_recipe './node_exporter_install.rb'
 include_recipe './node_exporter_setup.rb'
 
+# Install the filestat_exporter here:
+include_recipe './filestat_exporter_install.rb'
+include_recipe './filestat_exporter_setup.rb'
+
 include_recipe './exporter_proxy.rb'

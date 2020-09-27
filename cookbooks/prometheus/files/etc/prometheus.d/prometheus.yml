@@ -50,7 +50,7 @@ scrape_configs:
     consul_sd_configs:
     - server: 'localhost:8500'
       services:
-        - 'node_exporter'
+        - 'node-exporter'
 
   - job_name: 'filestat'
     metrics_path: /filestat_exporter/metrics
@@ -58,7 +58,7 @@ scrape_configs:
     consul_sd_configs:
     - server: 'localhost:8500'
       services:
-        - 'filestat_exporter'
+        - 'filestat-exporter'
 
   - job_name: 'grafana'
     consul_sd_configs:

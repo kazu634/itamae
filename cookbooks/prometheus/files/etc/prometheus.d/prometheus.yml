@@ -14,6 +14,7 @@ rule_files:
   # - "first.rules"
   # - "second.rules"
   - '/etc/prometheus.d/alerts/node_exporter.yml'
+  - '/etc/prometheus.d/alerts/filestat.yml'
   - '/etc/prometheus.d/alerts/prometheus.yml'
 
 # A scrape configuration containing exactly one endpoint to scrape:
@@ -50,6 +51,14 @@ scrape_configs:
     - server: 'localhost:8500'
       services:
         - 'node_exporter'
+
+  - job_name: 'filestat'
+    metrics_path: /filestat_exporter/metrics
+
+    consul_sd_configs:
+    - server: 'localhost:8500'
+      services:
+        - 'filestat_exporter'
 
   - job_name: 'grafana'
     consul_sd_configs:

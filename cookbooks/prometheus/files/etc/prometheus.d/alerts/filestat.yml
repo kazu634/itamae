@@ -1,0 +1,12 @@
+groups:
+- name: filestat
+  rules:
+  - alert: RebootRequired
+    expr: file_glob_match_number{pattern="/var/run/reboot-required"} > 0
+    for: 24h
+    labels:
+      severity: warning
+    annotations:
+      summary: "Instance {{ $labels.instance }} requires rebooting."
+      description: "{{ $labels.instance }} requires rebooting."
+

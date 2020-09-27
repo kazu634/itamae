@@ -38,4 +38,11 @@ node.reverse_merge!({
     'storage' => '/opt/prometheus/',
     'location' => '/usr/local/bin/'
   },
+  'filestat_exporter' => {
+    'url' => 'https://github.com/michael-doubez/filestat_exporter/releases/download/',
+    'prefix' => 'filestat_exporter-',
+    'postfix' => '.linux-amd64.tar.gz',
+    'storage' => '/opt/filestat_exporter/',
+    'location' => '/usr/local/bin/'
+  },
 })

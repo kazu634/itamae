@@ -16,6 +16,6 @@ exporters:
   node_exporter:
     path: "/node_exporter/metrics"
     url: "http://127.0.0.1:9100/metrics"
-  statup_exporter:
-    path: "/statup_exporter/metrics"
-    url: "http://127.0.0.1:8080/metrics"
+  filestat_exporter:
+    path: "/filestat_exporter/metrics"
+    url: "http://127.0.0.1:9943/metrics"

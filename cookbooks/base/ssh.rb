@@ -9,6 +9,16 @@ end
 
 # Deploy the `sshd` configuration file:
 case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
+when "20.04"
+  remote_file '/etc/ssh/sshd_config' do
+    user 'root'
+    owner 'root'
+    group 'root'
+    mode '644'
+
+    source 'files/etc/ssh/sshd_config.2004'
+  end
+
 when "18.04"
   remote_file '/etc/ssh/sshd_config' do
     user 'root'

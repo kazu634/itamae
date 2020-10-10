@@ -13,11 +13,13 @@ remote_file '/etc/sudoers.d/webadm' do
   mode '440'
 end
 
-# Create `.ssh` directory:
-directory '/home/webadm/.ssh' do
-  owner 'webadm'
-  group 'webadm'
-  mode '700'
+# Create directories:
+%w(/home/webadm/.ssh /home/webadm/repo).each do |d|
+  directory d do
+    owner 'webadm'
+    group 'webadm'
+    mode '700'
+  end
 end
 
 # Deploy `~/.ssh/.ssh/authorized_keys`:

@@ -54,17 +54,18 @@ include_recipe './fortune.rb'
 # timezone configurations:
 include_recipe './timezone.rb'
 
-# ntp configurations:
-include_recipe './ntp.rb'
-
 # kernel configurations:
 include_recipe './kernel.rb'
 
 # Install mc command:
 include_recipe './mc.rb'
 
-# unnecessary configurations:
+# recipes for Ubuntu 16.04
 if node['platform_version'].to_f == 16.04
+  # ntp configurations
+  include_recipe './ntp.rb'
+
+  # misc recipe
   include_recipe './unnecessary.rb'
 end
 

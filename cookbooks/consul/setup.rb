@@ -13,6 +13,8 @@ template '/etc/consul.d/config.json' do
             manager_hosts: node['consul']['manager_hosts'],
             ipaddr: node['consul']['ipaddr'],
            )
+
+  notifies :restart, 'service[supervisor]'
 end
 
 remote_file '/etc/consul.d/service-consul.json' do

@@ -39,8 +39,8 @@ include_recipe './packages.rb'
 # Lang Setting:
 include_recipe './lang.rb'
 
-# `cron-apt` settings:
-include_recipe './cron-apt.rb'
+# `unattended-upgrade` settings:
+include_recipe './unattended-upgrade.rb'
 
 # `ufw` configurations:
 include_recipe './ufw.rb'

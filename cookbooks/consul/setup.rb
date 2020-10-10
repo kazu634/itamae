@@ -23,14 +23,6 @@ remote_file '/etc/consul.d/service-consul.json' do
   only_if '{ node["consul"]["manager"]}'
 end
 
-remote_file '/etc/monit/conf.d/consul.conf' do
-  owner 'root'
-  group 'root'
-  mode '644'
-
-  notifies :restart, 'service[monit]'
-end
-
 execute 'Reload supervisor' do
   user 'root'
 

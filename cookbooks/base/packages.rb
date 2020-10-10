@@ -53,7 +53,6 @@ end
 
 [
   '/usr/share/git-core/templates/hooks/pre-commit',
-  '/usr/share/git-core/templates/hooks/prepare-commit-msg',
 ].each do |conf|
   remote_file conf do
     user 'root'

@@ -9,11 +9,12 @@ end
 # Install the extra kernel:
 unless node['is_ec2']
   case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
-  when "18.04"
-    package 'linux-image-extra-virtual'
-  else
+  when "16.04"
     KERNEL = run_command("uname -r").stdout.chomp
     package "linux-image-extra-#{KERNEL}"
+
+  when "18.04"
+    package 'linux-image-extra-virtual'
   end
 end
 

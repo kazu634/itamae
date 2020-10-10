@@ -1,5 +1,5 @@
 case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
-when "18.04"
+when "18.04", "20.04"
   execute 'timedatectl set-timezone Asia/Tokyo' do
     not_if 'timedatectl | grep Tokyo'
   end

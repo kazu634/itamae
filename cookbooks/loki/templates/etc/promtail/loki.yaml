@@ -1,0 +1,41 @@
+server:
+  disable: true
+
+positions:
+  filename: /var/opt/promtail/promtail_loki_position.yaml
+
+clients:
+  - url: http://<%= @LOKIENDPOINT %>/loki/api/v1/push
+
+scrape_configs:
+  - job_name: loki
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: loki
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/loki.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="loki"}'
+        stages:
+        - regex:
+
+            expression: '^[^ ]+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ loki[^ ]+ .*level=(?P<level>[^ ]+) ts=(?P<timestamp>[^ ]+) (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.999999999Z
+            location: Etc/GMT
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "warn" .Value "warning" }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message

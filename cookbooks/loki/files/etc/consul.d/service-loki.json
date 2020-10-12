@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "loki",
+    "port": 3100
+  }
+}

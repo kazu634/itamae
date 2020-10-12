@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "filestat-exporter",
+    "port": 60000
+  }
+}

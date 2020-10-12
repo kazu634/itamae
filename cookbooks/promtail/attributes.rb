@@ -8,7 +8,7 @@ node.reverse_merge!({
     'storage' => '/opt/promtail/bin/',
     'location' => '/usr/local/bin/',
     'data' => '/var/opt/promtail/',
-    'lokiendpoint' => '192.168.10.118:3100'
+    'lokiendpoint' => 'loki.service.consul:3100'
   },
 })
 

@@ -32,7 +32,7 @@ scrape_configs:
         selector: '{job="sudo"} |~ "/bin/sh"'
         stages:
         - drop:
-            expression: (CRON|sshd|session)
+            expression: (CRON|sshd|session|securetty)
         - regex:
             expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
 
@@ -59,7 +59,7 @@ scrape_configs:
         selector: '{job="sudo"} !~ "/bin/sh"'
         stages:
         - drop:
-            expression: (CRON|sshd|session)
+            expression: (CRON|sshd|session|securetty)
         - regex:
             expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
 

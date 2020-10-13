@@ -39,8 +39,8 @@ include_recipe './packages.rb'
 # Lang Setting:
 include_recipe './lang.rb'
 
-# `cron-apt` settings:
-include_recipe './cron-apt.rb'
+# `unattended-upgrade` settings:
+include_recipe './unattended-upgrade.rb'
 
 # `ufw` configurations:
 include_recipe './ufw.rb'
@@ -54,17 +54,18 @@ include_recipe './fortune.rb'
 # timezone configurations:
 include_recipe './timezone.rb'
 
-# ntp configurations:
-include_recipe './ntp.rb'
-
 # kernel configurations:
 include_recipe './kernel.rb'
 
 # Install mc command:
 include_recipe './mc.rb'
 
-# unnecessary configurations:
+# recipes for Ubuntu 16.04
 if node['platform_version'].to_f == 16.04
+  # ntp configurations
+  include_recipe './ntp.rb'
+
+  # misc recipe
   include_recipe './unnecessary.rb'
 end
 

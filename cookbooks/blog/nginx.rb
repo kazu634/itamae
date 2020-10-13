@@ -30,19 +30,6 @@ remote_file '/etc/cron.d/blog' do
   mode '644'
 end
 
-# Add monit configuration file for monitoring nginx logs:
-remote_file '/etc/monit/conf.d/blog-log.conf' do
-  owner 'root'
-  group 'root'
-  mode '644'
-
-  notifies :reload, 'service[monit]'
-end
-
-service 'monit' do
-  action :nothing
-end
-
 # Create storage directory for blog data
 directory '/home/webadm/works/public' do
   owner 'webadm'

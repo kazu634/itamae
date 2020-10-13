@@ -13,6 +13,8 @@ template '/etc/consul.d/config.json' do
             manager_hosts: node['consul']['manager_hosts'],
             ipaddr: node['consul']['ipaddr'],
            )
+
+  notifies :restart, 'service[supervisor]'
 end
 
 remote_file '/etc/consul.d/service-consul.json' do
@@ -21,14 +23,6 @@ remote_file '/etc/consul.d/service-consul.json' do
   mode '644'
 
   only_if '{ node["consul"]["manager"]}'
-end
-
-remote_file '/etc/monit/conf.d/consul.conf' do
-  owner 'root'
-  group 'root'
-  mode '644'
-
-  notifies :restart, 'service[monit]'
 end
 
 execute 'Reload supervisor' do

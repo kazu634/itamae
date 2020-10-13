@@ -4,11 +4,11 @@ include_recipe './attributes.rb'
 # Kernel Parameters:
 include_recipe './kernel.rb'
 
-# Install Let's Encrypt:
-include_recipe './lego.rb'
-
 # Prerequisites for Building nginx:
 include_recipe './webadm.rb'
+
+# Install Let's Encrypt:
+include_recipe './lego.rb'
 
 # Build nginx:
 include_recipe './build.rb'

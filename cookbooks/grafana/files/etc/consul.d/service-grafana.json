@@ -1,6 +1,12 @@
 {
   "service": {
     "name": "grafana",
-    "port": 3000
+    "port": 3000,
+    "check":{
+      "tcp": "localhost:3000",
+      "tls_skip_verify": false,
+      "interval": "60s",
+      "timeout": "1s"
+    }
   }
 }

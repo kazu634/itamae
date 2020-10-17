@@ -8,10 +8,14 @@
 end
 
 # Deploy `prometheus` files:
-remote_file '/etc/loki/loki-config.yml' do
+template '/etc/loki/loki-config.yml' do
   owner  'root'
   group  'root'
   mode   '644'
+
+  variables(ipaddr: node['consul']['ipaddr'])
+
+  notifies :restart, 'service[loki]'
 end
 
 # Deploy `systemd` configuration for `prometheus`:
@@ -27,10 +31,12 @@ service 'loki' do
 end
 
 # Depoy `consul` service configuration for `loki`:
-remote_file '/etc/consul.d/service-loki.json' do
+template '/etc/consul.d/service-loki.json' do
   owner  'root'
   group  'root'
   mode   '644'
+
+  variables(ipaddr: node['consul']['ipaddr'])
 
   notifies :restart, 'service[supervisor]'
 end

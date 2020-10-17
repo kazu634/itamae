@@ -1,6 +1,13 @@
 {
   "service": {
     "name": "node-exporter",
-    "port": 60000
+    "port": 60000, 
+    "check":{
+      "http": "http://localhost:60000/node_exporter/metrics",
+      "tls_skip_verify": false,
+      "interval": "60s",
+      "timeout": "1s", 
+      "success_before_passing": 3
+    }
   }
 }

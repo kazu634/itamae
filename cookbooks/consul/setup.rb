@@ -21,8 +21,6 @@ remote_file '/etc/consul.d/service-consul.json' do
   owner 'root'
   group 'root'
   mode '644'
-
-  only_if '{ node["consul"]["manager"]}'
 end
 
 execute 'Reload supervisor' do

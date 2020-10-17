@@ -1,6 +1,12 @@
 {
   "service": {
     "name": "consul",
-    "port": 8600
+    "port": 8600,
+    "check":{
+      "tcp": "localhost:8600",
+      "interval": "60s",
+      "timeout": "1s",
+      "success_before_passing": 3
+    }
   }
 }

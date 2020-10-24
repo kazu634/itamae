@@ -25,3 +25,14 @@ end
 service 'supervisor' do
   action :nothing
 end
+
+# Deploy /etc/hosts file:
+template '/etc/promtail/snmp_exporter.yaml' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  variables(HOSTNAME: node[:hostname], LOKIENDPOINT: node['promtail']['lokiendpoint'])
+
+  notifies :restart, 'service[promtail-prometheus]'
+end

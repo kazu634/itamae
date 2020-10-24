@@ -9,8 +9,13 @@ exporter:
   # Default enable/disable of metrics - overridden if not set by parameter '-metric.*'
   enable_crc32_metric: true
   enable_nb_line_metric: false
+
   # list of patterns to apply - metrics can be enable/disabled for each group
   files:
     - patterns: ["/var/run/reboot-required"]
       enable_crc32_metric: false
       enable_nb_line_metric: false
+
+   - patterns: ["/var/spool/apt-mirror/updated"]
+     enable_crc32_metric: false
+     enable_nb_line_metric: false

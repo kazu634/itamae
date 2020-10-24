@@ -18,23 +18,26 @@ scrape_configs:
         hostname: <%= @HOSTNAME %>
         __path__: /var/log/supervisor/digdag.log
 
+
     pipeline_stages:
     - match:
-        selector: '{job="digdag"}'
+        selector: '{job="digdag"} |~ "^[0-9]+-[0-9]+-[0-9]+"'
 
         stages:
-        - drop:
-            expression: ^[^0-9]
-
-        - drop:
-            expression: ^[0-9\/]+ .*$
-
         - regex:
-            expression: '^(?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ [0-9]+:[0-9]+:[0-9]+ [\+\-][0-9]+)[ :]+(\[(?P<level>[^\])]+)\] (?P<message1>[^ ]+) [^ ]+ (?P<message2>.+))$'
+            expression: '^(?P<datetime>\d+\-\d+\-\d+ \d+:\d+:\d+)([\.\d]+)? (?P<timezone>[\+\d]+) \[(?P<level>[^\]]+)\] (?P<message>.+)$'
+
+        - template:
+            source: timestamp
+            template: '{{ .datetime }} {{ .timezone }}'
 
         - timestamp:
             source: timestamp
             format: 2006-01-02 15:04:05 -0700
+
+        - template:
+            source: level
+            template: '{{ if .level }}{{ .level }}{{ else }}notice{{ end }}'
 
         - template:
             source: level
@@ -44,13 +47,19 @@ scrape_configs:
             source: level
             template: '{{ regexReplaceAllLiteral "warn" .Value "warning" }}'
 
-        - template:
-            source: message
-            template: '{{ if .message1 }} {{ .message1 }} {{ .message2 }} {{ else }} Digdag has started {{ end }}'
-
         - labels:
             level:
 
         - output:
             source: message
 
+    - match:
+        selector: '{job="digdag"} !~ "^[0-9]+-[0-9]+-[0-9]+"'
+
+        stages:
+        - template:
+            source: level
+            template: 'info'
+
+        - labels:
+            level:

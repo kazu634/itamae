@@ -1,6 +1,13 @@
 {
   "service": {
     "name": "prometheus",
-    "port": 9100
+    "port": 9090,
+    "check":{
+      "http": "http://localhost:9090/",
+      "tls_skip_verify": false,
+      "interval": "60s",
+      "timeout": "1s",
+      "success_before_passing": 3
+    }
   }
 }

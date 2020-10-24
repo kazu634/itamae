@@ -1,0 +1,21 @@
+groups:
+- name: snmp
+  rules:
+  - alert: NetworkInboundBandwidth
+    expr: ((delta(ifHCInOctets{ifName="bond0"}[10m]) * 8 * 100) / (600 * ifSpeed{ifName="bond0"})) * 100 > 80
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Network Bandwidth (inbound) exceeds 80%"
+      description: "Network Bandwidth (inbound) exceeds 80%"
+
+  - alert: NetworkOutboundBandwidth
+    expr: ((delta(ifHCOutOctets{ifName="bond0"}[10m]) * 8 * 100) / (600 * ifSpeed{ifName="bond0"})) * 100 > 80
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Network Bandwidth (outbound) exceeds 80%"
+      description: "Network Bandwidth (outbound) exceeds 80%"
+

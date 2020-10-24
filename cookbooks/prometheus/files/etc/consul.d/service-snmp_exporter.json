@@ -1,0 +1,12 @@
+{
+  "service": {
+    "name": "snmp_exporter",
+    "port": 9116,
+    "check":{
+      "tcp": "127.0.0.1:9116",
+      "interval": "60s",
+      "timeout": "1s",
+      "success_before_passing": 3
+    }
+  }
+}

@@ -16,6 +16,6 @@ exporter:
       enable_crc32_metric: false
       enable_nb_line_metric: false
 
-   - patterns: ["/var/spool/apt-mirror/updated"]
-     enable_crc32_metric: false
-     enable_nb_line_metric: false
+    - patterns: ["/var/spool/apt-mirror/updated"]
+      enable_crc32_metric: false
+      enable_nb_line_metric: false

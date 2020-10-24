@@ -12,6 +12,15 @@ remote_file '/etc/supervisor/conf.d/snmp_exporter.conf' do
   notifies :restart, 'service[supervisor]'
 end
 
+# Deploy `consul` config:
+remote_file '/etc/consul.d/service-snmp_exporter.json' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[supervisor]'
+end
+
 # Restart the `supervisor`:
 service 'supervisor' do
   action :nothing

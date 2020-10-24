@@ -45,4 +45,11 @@ node.reverse_merge!({
     'storage' => '/opt/filestat_exporter/',
     'location' => '/usr/local/bin/'
   },
+  'snmp_exporter' => {
+    'url' => 'https://github.com/prometheus/snmp_exporter/releases/download/',
+    'prefix' => 'snmp_exporter-',
+    'postfix' => '.linux-amd64.tar.gz',
+    'storage' => '/opt/snmp_exporter/',
+    'location' => '/usr/local/bin/'
+  },
 })

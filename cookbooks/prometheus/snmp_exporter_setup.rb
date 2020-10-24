@@ -36,3 +36,15 @@ template '/etc/promtail/snmp_exporter.yaml' do
 
   notifies :restart, 'service[promtail-prometheus]'
 end
+
+# Deploy the `systemd` configuration:
+remote_file '/lib/systemd/system/promtail-snmp_exporter.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+# Service setting:
+service 'promtail-snmp_exporter' do
+  action [ :enable, :restart ]
+end

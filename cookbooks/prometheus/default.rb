@@ -10,6 +10,8 @@ include_recipe './alertmanager_setup.rb'
 include_recipe './alertmanager_webhook_install.rb'
 include_recipe './alertmanager_webhook_setup.rb'
 
+include_recipe './snmp_exporter_install.rb'
+
 # Deploy /etc/hosts file:
 HOSTNAME = run_command('uname -n').stdout.chomp
 

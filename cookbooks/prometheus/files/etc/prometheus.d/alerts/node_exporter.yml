@@ -113,13 +113,13 @@ groups:
   # Alert threshold depends on nature of application.
   # Please read: https://github.com/samber/awesome-prometheus-alerts/issues/58
   - alert: HostContextSwitching
-    expr: (rate(node_context_switches_total[5m])) / (count without(cpu, mode) (node_cpu_seconds_total{mode="idle"})) > 4000
+    expr: (rate(node_context_switches_total[5m])) / (count without(cpu, mode) (node_cpu_seconds_total{mode="idle"})) > 4500
     for: 5m
     labels:
       severity: warning
     annotations:
       summary: "Host context switching (instance {{ $labels.instance }})"
-      description: "Context switching is growing on node (> 4000 / s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+      description: "Context switching is growing on node (> 4500 / s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
   - alert: HostSwapIsFillingUp
     expr: (1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80
@@ -176,8 +176,8 @@ groups:
       description: "At least one device in RAID array on {{ $labels.instance }} failed. Array {{ $labels.md_device }} needs attention and possibly a disk swap\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
   - alert: HostKernelVersionDeviations
-    expr: count(sum(label_replace(node_uname_info, "kernel", "$1", "release", "([0-9]+.[0-9]+.[0-9]+).*")) by (kernel)) > 1
-    for: 5m
+    expr: count(sum(label_replace(node_uname_info, "kernel", "$1", "release", "([0-9]+.[0-9]+.[0-9]+).*")) by (kernel)) > 2
+    for: 24h
     labels:
       severity: warning
     annotations:

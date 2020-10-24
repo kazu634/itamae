@@ -10,3 +10,11 @@ groups:
       summary: "Instance {{ $labels.instance }} requires rebooting."
       description: "{{ $labels.instance }} requires rebooting."
 
+  - alert: apt-mirror
+    expr: time() - file_stat_modif_time_seconds{path="/var/spool/apt-mirror/updated"} > 87000
+    for: 12h
+    labels:
+      severity: error
+    annotations:
+      summary: "apt-mirror is not updated."
+      description: "apt-mirror is not updated."

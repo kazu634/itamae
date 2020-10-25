@@ -34,7 +34,7 @@ template '/etc/promtail/snmp_exporter.yaml' do
 
   variables(HOSTNAME: node[:hostname], LOKIENDPOINT: node['promtail']['lokiendpoint'])
 
-  notifies :restart, 'service[promtail-prometheus]'
+  notifies :restart, 'service[promtail-snmp_exporter]'
 end
 
 # Deploy the `systemd` configuration:

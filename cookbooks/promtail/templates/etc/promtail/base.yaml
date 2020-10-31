@@ -32,7 +32,7 @@ scrape_configs:
         selector: '{job="sudo"} |~ "/bin/sh"'
         stages:
         - drop:
-            expression: (CRON|sshd|session|securetty)
+            expression: (CRON|sshd|session|securetty|systemd-logind)
         - regex:
             expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
 
@@ -59,7 +59,7 @@ scrape_configs:
         selector: '{job="sudo"} !~ "/bin/sh"'
         stages:
         - drop:
-            expression: (CRON|sshd|session|securetty)
+            expression: (CRON|sshd|session|securetty|systemd-logind)
         - regex:
             expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
 
@@ -210,6 +210,10 @@ scrape_configs:
     - match:
         selector: '{job="promtail"}'
         stages:
+
+        - drop:
+            expression: 'entry out of order'
+
         - regex:
             expression: '^[^ ]+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ promtail[^ ]+ .*ts=(?P<timestamp>[^ ]+) (?P<message>.+)$'
 
@@ -258,7 +262,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="init"} |~ "(apt|Message of the Day|Temporary Directories)"'
+        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service)"'
         stages:
         - template:
             source: level
@@ -268,7 +272,7 @@ scrape_configs:
             level:
 
     - match:
-        selector: '{job="init"} !~ "(apt|Message of the Day|Temporary Directories)"'
+        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service)"'
         stages:
         - template:
             source: level

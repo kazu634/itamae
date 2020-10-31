@@ -35,7 +35,7 @@ scrape_configs:
 
         - template:
             source: level
-            template: '{{ regexReplaceAllLiteral "(2|3)[0-9]+" .Value "info" }}'
+            template: '{{ regexReplaceAllLiteral "(1|2|3)[0-9]+" .Value "info" }}'
 
         - template:
             source: level

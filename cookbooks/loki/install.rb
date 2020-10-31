@@ -40,7 +40,7 @@ if result.exit_status != 0
     mode '755'
   end
 
-  execute "unzip -d #{node['loki']['storage']} #{TMP}"
+  execute "unzip -d #{node['loki']['storage']} -o #{TMP}"
 
   # Change Owner and Permissions:
   file "#{node['loki']['storage']}loki-linux-amd64" do

@@ -1,0 +1,12 @@
+{
+  "service": {
+    "name": "vector-syslog",
+    "port": 514,
+    "check":{
+      "tcp": "<%= @ipaddr %>:514",
+      "interval": "60s",
+      "timeout": "1s",
+      "success_before_passing": 3
+    }
+  }
+}

@@ -1,0 +1,14 @@
+/var/log/vector/syslog.log {
+    ifempty
+    dateformat .%Y%m%d
+    missingok
+    compress
+    daily
+    rotate 10
+    prerotate
+        /bin/systemctl stop vector-syslog.service
+    endscript
+    postrotate
+        /bin/systemctl start vector-syslog.service
+    endscript
+}

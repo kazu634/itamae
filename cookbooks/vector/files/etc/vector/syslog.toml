@@ -1,0 +1,16 @@
+data_dir = "/var/lib/vector"
+
+[sources.syslog]
+  address = "0.0.0.0:514" # required, required when mode = "tcp" or mode = "udp"
+  mode    = "tcp"         # required
+  type    = "syslog"      # required
+
+[sinks.syslog-file]
+  # General
+  type        = "file"                                # required
+  inputs      = ["syslog"]                            # required
+  healthcheck = true                                  # optional, default
+  path        = "/var/log/vector/syslog.log"          # required
+
+  # Encoding
+  encoding.codec = "ndjson" # required

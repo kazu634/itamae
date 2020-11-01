@@ -60,6 +60,9 @@ include_recipe './kernel.rb'
 # Install mc command:
 include_recipe './mc.rb'
 
+# Install lsyncd command:
+include_recipe './lsyncd.rb'
+
 # recipes for Ubuntu 16.04
 if node['platform_version'].to_f == 16.04
   # ntp configurations

@@ -1,0 +1,13 @@
+/var/log/lsyncd/*.log {
+  rotate 4
+  compress
+  delaycompress
+  missingok
+  notifempty
+  sharedscripts
+  postrotate
+  if [ -f /var/run/lsyncd.pid ]; then
+    /usr/bin/systemctl restart lsyncd.service > /dev/null 2>/dev/null || true
+  fi
+  endscript
+}

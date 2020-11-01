@@ -16,10 +16,14 @@ directory '/root/.ssh/' do
 end
 
 %w(id_rsa known_hosts).each do |f|
-  remote_file "/root/.ssh/#{f}" do
+  encrypted_remote_file "/root/.ssh/#{f}" do
     owner 'root'
     group 'root'
     mode  '600'
+
+    source "files/root/.ssh/#{f}"
+
+    password ENV['ITAMAE_PASSWORD']
   end
 end
 

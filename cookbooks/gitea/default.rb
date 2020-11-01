@@ -3,3 +3,6 @@ include_recipe './attributes.rb'
 
 # Install:
 include_recipe './install.rb'
+
+# Setup:
+include_recipe './setup.rb'

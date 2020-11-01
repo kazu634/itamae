@@ -1,0 +1,61 @@
+server:
+  disable: true
+
+positions:
+  filename: /var/opt/promtail/promtail_gitea_position.yaml
+
+clients:
+  - url: http://<%= @LOKIENDPOINT %>/loki/api/v1/push
+
+scrape_configs:
+  - job_name: gitea
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: gitea
+        hostname: <%= @HOSTNAME %>
+        vhost: gitea.kazu634.com
+        __path__: /var/log/supervisor/gitea.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="gitea"}'
+
+        stages:
+        - drop:
+            expression: "(Static|robots.txt|sitemap.xml)"
+
+        - regex:
+            expression: '^\[Macaron\] (?P<timestamp>[0-9]+\-[0-9]+\-[0-9]+ +[0-9]+:[0-9]+:[0-9]+): (?P<message1>[^\/]+) (?P<uri>\/[^ ]*) (?P<response>[^ ]+) (?P<message2>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02 15:04:05
+            location: Asia/Tokyo
+
+        - template:
+            source: message
+            template: '{{ .message1 }} {{ .uri }} ({{ .message2 }})'
+
+        - template:
+            source: level
+            template: '{{ .response }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "(2[0-9]+|3[0-9]+|for)" .Value "info" }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "4[0-9]+" .Value "warning" }}'
+
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "5[0-9]+" .Value "error" }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message

@@ -72,6 +72,21 @@ if node['platform_version'].to_f == 16.04
   include_recipe './unnecessary.rb'
 end
 
+# recipes for Ubuntu 20.04
+if node['platform_version'].to_f == 20.04
+  remote_file '/etc/multipath.conf' do
+    owner 'root'
+    group 'root'
+    mode  '0644'
+
+    notifies :restart, 'service[multipath-tools]'
+  end
+
+  service 'multipath-tools' do
+    action :nothing
+  end
+end
+
 # AWS EC2 Swap Setting:
 if node['is_ec2']
   include_recipe './aws_ec2.rb'

@@ -7,6 +7,14 @@
   end
 end
 
+%w(loki.yaml prometheus.yaml).each do |conf|
+  remote_file "/etc/grafana/provisioning/datasources/#{conf}" do
+    owner 'root'
+    group 'grafana'
+    mode  '640'
+  end
+end
+
 # Start/Enable `grafana`:
 service 'grafana-server' do
   action [ :enable, :start ]

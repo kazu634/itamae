@@ -39,7 +39,7 @@ scrape_configs:
         action: drop
 
     - match:
-        selector: '{job="syslog", hostname="esxi-new", appname="Hostd"} |~ "(->|IpmiIfcOpenIpmiOpen|LikewiseGetDomainJoinInfo)"'
+        selector: '{job="syslog", hostname="esxi-new", appname="Hostd"} |~ "(->|IpmiIfcOpenIpmiOpen|LikewiseGetDomainJoinInfo|AddVirtualMachine: VM|Solo.HttpSvc.HTTPService|VigorCallback received fault|vim.fault.InvalidPowerState|Unable to get resource settings for a powered on VM|VigorOnlineStatusCb|N7Vmacore16TimeoutExceptionE)"'
         action: drop
 
     - match:
@@ -51,7 +51,15 @@ scrape_configs:
         action: drop
 
     - match:
-        selector: '{job="syslog", hostname="esxi-new", appname="Rhttpproxy"} |~ "(warning rhttpproxy)"'
+        selector: '{job="syslog", hostname="esxi-new", appname="Rhttpproxy"} |~ "(warning rhttpproxy|->)"'
+        action: drop
+
+    - match:
+        selector: '{job="syslog", hostname="esxi-new", appname="usbarb", level="notice"}'
+        action: drop
+
+    - match:
+        selector: '{job="syslog", hostname="esxi-new", appname="vmauthd", level="notice"}'
         action: drop
 
     - match:
@@ -83,7 +91,28 @@ scrape_configs:
     - match:
         selector: '{job="syslog", hostname="ubnt"}'
         stages:
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.999Z
+            location: Asia/Bangkok
 
+        - template:
+            source: level
+            template: '{{ regexReplaceAllLiteral "err" .Value "error" }}'
+
+        - labels:
+            level:
+            hostname:
+
+        - labeldrop:
+            - appname
+
+        - output:
+            source: message
+
+    - match:
+        selector: '{job="syslog", hostname="ds418"}'
+        stages:
         - timestamp:
             source: timestamp
             format: 2006-01-02T15:04:05.999Z

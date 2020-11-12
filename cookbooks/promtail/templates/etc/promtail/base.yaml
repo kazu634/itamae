@@ -262,7 +262,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service)"'
+        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service)"'
         stages:
         - template:
             source: level
@@ -272,7 +272,7 @@ scrape_configs:
             level:
 
     - match:
-        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service)"'
+        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service)"'
         stages:
         - template:
             source: level
@@ -386,3 +386,29 @@ scrape_configs:
 
         - output:
             source: message
+
+  - job_name: unattended-upgrades
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: unattended-upgrades
+        hostname: <%= @HOSTNAME %>
+        level: notice
+        __path__: /var/log/unattended-upgrades/unattended-upgrades.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="unattended-upgrades"}'
+        stages:
+        - regex:
+            expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),\d{3} (?P<level>[^ ]+) (?P<message>.+)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02 15:04:05
+            location: Asia/Tokyo
+
+        - output:
+            source: message
+

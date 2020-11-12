@@ -29,6 +29,12 @@ end
   end
 end
 
+remote_file '/etc/grafana/grafana.ini' do
+  owner 'grafana'
+  group 'grafana'
+  mode '640'
+end
+
 # Start/Enable `grafana`:
 service 'grafana-server' do
   action [ :enable, :start ]

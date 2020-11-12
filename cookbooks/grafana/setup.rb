@@ -15,6 +15,20 @@ end
   end
 end
 
+directory "/var/lib/grafana/provision/dashboards" do
+  owner 'grafana'
+  group 'grafana'
+  mode '640'
+end
+
+%w(node_exporter.json node_exporter_all_nodes.json synology.json).each do |conf|
+  remote_file "/var/lib/grafana/provision/dashboards/#{conf}" do
+    owner 'grafana'
+    group 'grafana'
+    mode '640'
+  end
+end
+
 # Start/Enable `grafana`:
 service 'grafana-server' do
   action [ :enable, :start ]

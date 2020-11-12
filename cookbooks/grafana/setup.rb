@@ -1,3 +1,12 @@
+# Start provisioning:
+%w(node_exporter.yaml node_exporter_all_nodes.yaml synology.yaml).each do |conf|
+  remote_file "/etc/grafana/provisioning/dashboards/#{conf}" do
+    owner 'root'
+    group 'grafana'
+    mode  '640'
+  end
+end
+
 # Start/Enable `grafana`:
 service 'grafana-server' do
   action [ :enable, :start ]

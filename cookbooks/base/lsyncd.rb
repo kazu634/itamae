@@ -24,6 +24,9 @@ end
     source "files/root/.ssh/#{f}"
 
     password ENV['ITAMAE_PASSWORD']
+
+    # Do not overwrite:
+    not_if "test -e /root/.ssh/#{f}"
   end
 end
 

@@ -18,7 +18,7 @@ end
 directory "/var/lib/grafana/provision/dashboards" do
   owner 'grafana'
   group 'grafana'
-  mode '640'
+  mode '755'
 end
 
 %w(node_exporter.json node_exporter_all_nodes.json synology.json).each do |conf|

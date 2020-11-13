@@ -1,3 +1,40 @@
+# Start provisioning:
+%w(node_exporter.yaml node_exporter_all_nodes.yaml synology.yaml).each do |conf|
+  remote_file "/etc/grafana/provisioning/dashboards/#{conf}" do
+    owner 'root'
+    group 'grafana'
+    mode  '640'
+  end
+end
+
+%w(loki.yaml prometheus.yaml).each do |conf|
+  remote_file "/etc/grafana/provisioning/datasources/#{conf}" do
+    owner 'root'
+    group 'grafana'
+    mode  '640'
+  end
+end
+
+directory "/var/lib/grafana/provision/dashboards" do
+  owner 'grafana'
+  group 'grafana'
+  mode '640'
+end
+
+%w(node_exporter.json node_exporter_all_nodes.json synology.json).each do |conf|
+  remote_file "/var/lib/grafana/provision/dashboards/#{conf}" do
+    owner 'grafana'
+    group 'grafana'
+    mode '640'
+  end
+end
+
+remote_file '/etc/grafana/grafana.ini' do
+  owner 'grafana'
+  group 'grafana'
+  mode '640'
+end
+
 # Start/Enable `grafana`:
 service 'grafana-server' do
   action [ :enable, :start ]

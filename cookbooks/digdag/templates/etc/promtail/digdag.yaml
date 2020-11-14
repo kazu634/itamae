@@ -18,8 +18,11 @@ scrape_configs:
         hostname: <%= @HOSTNAME %>
         __path__: /var/log/supervisor/digdag.log
 
-
     pipeline_stages:
+    - match:
+        selector: '{job="digdag"} !~ "^[0-9]+-[0-9]+-[0-9]+"'
+        action: drop
+
     - match:
         selector: '{job="digdag"} |~ "^[0-9]+-[0-9]+-[0-9]+"'
 
@@ -52,14 +55,3 @@ scrape_configs:
 
         - output:
             source: message
-
-    - match:
-        selector: '{job="digdag"} !~ "^[0-9]+-[0-9]+-[0-9]+"'
-
-        stages:
-        - template:
-            source: level
-            template: 'info'
-
-        - labels:
-            level:

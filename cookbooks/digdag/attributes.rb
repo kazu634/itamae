@@ -8,5 +8,12 @@ node.reverse_merge!({
   'digdag' => {
     'binary_url' => 'https://dl.digdag.io/digdag-latest',
     'install_path' => '/opt/digdag'
-  }
+  },
+  'rclone' => {
+    'url' => 'https://github.com/rclone/rclone/releases/download/',
+    'prefix' => 'rclone-',
+    'postfix' => '-linux-amd64',
+    'storage' => '/opt/rclone/',
+    'location' => '/usr/local/bin/'
+  },
 })

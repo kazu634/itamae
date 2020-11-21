@@ -1,6 +1,6 @@
 package 'cifs-utils'
 
-%w(shared tmp img).each do |d|
+%w(shared tmp img backup).each do |d|
   directory "/mnt/#{d}/" do
     owner 'root'
     group 'root'
@@ -32,7 +32,7 @@ file '/etc/fstab' do
     content << "//192.168.10.200/homes/kazu634/Drive/Moments /mnt/img cifs username=admin,password=Holiday88,uid=root,gid=root,file_mode=0777,dir_mode=0777,vers=3.0,_netdev 0 0\n"
   end
 
-  not_if 'grep img /etc/fstab'
+  not_if 'grep Moments /etc/fstab'
 end
 
 file '/etc/fstab' do

@@ -32,8 +32,8 @@ end
 
 # Depoy `consul` service configuration for `loki`:
 template '/etc/consul.d/service-loki.json' do
-  owner  'root'
-  group  'root'
+  owner  'consul'
+  group  'consul'
   mode   '644'
 
   variables(ipaddr: node['consul']['ipaddr'])

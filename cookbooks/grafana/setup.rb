@@ -42,8 +42,8 @@ end
 
 # Deploy `consul` config for `grafana`:
 remote_file '/etc/consul.d/service-grafana.json' do
-  owner 'root'
-  group 'root'
+  owner 'consul'
+  group 'consul'
   mode '644'
 
   notifies :reload, 'service[consul]'

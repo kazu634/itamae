@@ -14,8 +14,8 @@ end
 
 # Deploy `consul` config:
 remote_file '/etc/consul.d/service-snmp_exporter.json' do
-  owner  'root'
-  group  'root'
+  owner  'consul'
+  group  'consul'
   mode   '644'
 
   notifies :reload, 'service[consul]'

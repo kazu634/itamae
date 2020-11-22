@@ -25,8 +25,8 @@ end
 
 # Depoy `consul` service configuration for `prometheus`:
 remote_file '/etc/consul.d/service-prometheus.json' do
-  owner  'root'
-  group  'root'
+  owner  'consul'
+  group  'consul'
   mode   '644'
 
   notifies :reload, 'service[consul]'

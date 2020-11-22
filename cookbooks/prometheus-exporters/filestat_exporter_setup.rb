@@ -18,8 +18,8 @@ end
 
 # Deploy `consul` config for `node_exporter`:
 remote_file '/etc/consul.d/service-filestat_exporter.json' do
-  owner 'root'
-  group 'root'
+  owner 'consul'
+  group 'consul'
   mode '644'
 
   notifies :reload, 'service[consul]'

@@ -15,6 +15,8 @@ template '/etc/consul.d/consul.hcl' do
            )
 
   source "templates/etc/consul.d/#{SRC}"
+
+  notifies :restart, 'service[consul]'
 end
 
 directory '/var/log/consul/' do
@@ -23,10 +25,22 @@ directory '/var/log/consul/' do
   mode '0755'
 end
 
+remote_file '/etc/systemd/system/consul.service' do
+  owner 'root'
+  group 'root'
+  mode '0644'
+
+  notifies :restart, 'service[consul]'
+end
+
 remote_file '/etc/consul.d/service-consul.json' do
   owner 'consul'
   group 'consul'
   mode '644'
+end
+
+service 'consul' do
+  action [:enable, :start]
 end
 
 # iptables settings here:

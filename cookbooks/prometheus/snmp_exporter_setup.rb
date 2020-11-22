@@ -18,11 +18,11 @@ remote_file '/etc/consul.d/service-snmp_exporter.json' do
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
+# Restart the `reload`:
+service 'consul' do
   action :nothing
 end
 

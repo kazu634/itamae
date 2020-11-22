@@ -56,7 +56,11 @@ template '/etc/consul.d/service-vector-syslog.json' do
 
   variables(ipaddr: node['vector']['ipaddr'])
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
+end
+
+service 'cosul' do
+  action :nothing
 end
 
 template '/etc/promtail/syslog.yaml' do

@@ -13,10 +13,10 @@ remote_file '/etc/consul.d/service-node_exporter.json' do
   group 'root'
   mode '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
 end
 
-service 'supervisor' do
+service 'consul' do
   action :nothing
 end
 

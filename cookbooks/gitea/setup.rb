@@ -74,7 +74,11 @@ remote_file '/etc/consul.d/service-gitea.json' do
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
+end
+
+service 'consul' do
+  action :nothing
 end
 
 # Depoy `promtail` configuration for `gitea`:

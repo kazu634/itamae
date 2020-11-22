@@ -38,7 +38,11 @@ template '/etc/consul.d/service-loki.json' do
 
   variables(ipaddr: node['consul']['ipaddr'])
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
+end
+
+service 'consul' do
+  action :nothing
 end
 
 # Depoy `promtail` configuration for `loki`:

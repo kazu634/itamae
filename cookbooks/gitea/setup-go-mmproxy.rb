@@ -17,7 +17,11 @@ remote_file '/etc/consul.d/service-go-mmproxy.json' do
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
+end
+
+service 'consul' do
+  action :nothing
 end
 
 # Firewall settings here:

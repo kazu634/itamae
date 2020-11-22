@@ -3,7 +3,7 @@ KEYSRV = "https://apt.releases.hashicorp.com/gpg"
 ID = "A3219F7B"
 
 execute "apt-key adv --keyserver #{KEYSRV} --recv-keys #{ID}" do
-  not_if "apt-key list | grep #{ID}"
+  not_if 'apt-key list | grep HashiCorp'
 end
 
 # Retrieve the Ubuntu code:

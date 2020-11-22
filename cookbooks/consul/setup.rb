@@ -1,4 +1,10 @@
-template '/etc/consul.d/config.json' do
+if node['consul']['manager']
+  SRC = 'consul-server.hcl.erb'
+else
+  SRC = 'consul-agent.hcl.erb'
+end
+
+template '/etc/consul.d/consul.hcl' do
   owner 'consul'
   group 'consul'
   mode '644'
@@ -8,7 +14,7 @@ template '/etc/consul.d/config.json' do
             ipaddr: node['consul']['ipaddr'],
            )
 
-  notifies :restart, 'service[supervisor]'
+  source "templates/etc/consul.d/#{SRC}"
 end
 
 remote_file '/etc/consul.d/service-consul.json' do

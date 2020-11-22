@@ -1,12 +1,6 @@
-remote_file '/etc/supervisor/conf.d/consul.conf' do
-  owner 'root'
-  group 'root'
-  mode '644'
-end
-
 template '/etc/consul.d/config.json' do
-  owner 'root'
-  group 'root'
+  owner 'consul'
+  group 'consul'
   mode '644'
 
   variables(manager: node['consul']['manager'],
@@ -18,15 +12,9 @@ template '/etc/consul.d/config.json' do
 end
 
 remote_file '/etc/consul.d/service-consul.json' do
-  owner 'root'
-  group 'root'
+  owner 'consul'
+  group 'consul'
   mode '644'
-end
-
-execute 'Reload supervisor' do
-  user 'root'
-
-  command '/usr/bin/supervisorctl update'
 end
 
 # iptables settings here:

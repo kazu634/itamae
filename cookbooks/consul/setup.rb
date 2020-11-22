@@ -17,6 +17,12 @@ template '/etc/consul.d/consul.hcl' do
   source "templates/etc/consul.d/#{SRC}"
 end
 
+directory '/var/log/consul/' do
+  owner 'consul'
+  group 'consul'
+  mode '0755'
+end
+
 remote_file '/etc/consul.d/service-consul.json' do
   owner 'consul'
   group 'consul'

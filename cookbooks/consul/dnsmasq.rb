@@ -1,3 +1,5 @@
+package 'dnsmasq'
+
 %w(dnsmasq resolvconf systemd-resolved).each do |s|
   service s do
     action :nothing

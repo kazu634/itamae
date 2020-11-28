@@ -1,12 +1,12 @@
-remote_file '/etc/supervisor/conf.d/consul.conf' do
-  owner 'root'
-  group 'root'
-  mode '644'
+if node['consul']['manager']
+  SRC = 'consul-server.hcl.erb'
+else
+  SRC = 'consul-agent.hcl.erb'
 end
 
-template '/etc/consul.d/config.json' do
-  owner 'root'
-  group 'root'
+template '/etc/consul.d/consul.hcl' do
+  owner 'consul'
+  group 'consul'
   mode '644'
 
   variables(manager: node['consul']['manager'],
@@ -14,19 +14,33 @@ template '/etc/consul.d/config.json' do
             ipaddr: node['consul']['ipaddr'],
            )
 
-  notifies :restart, 'service[supervisor]'
+  source "templates/etc/consul.d/#{SRC}"
+
+  notifies :restart, 'service[consul]'
+end
+
+directory '/var/log/consul/' do
+  owner 'consul'
+  group 'consul'
+  mode '0755'
+end
+
+remote_file '/etc/systemd/system/consul.service' do
+  owner 'root'
+  group 'root'
+  mode '0644'
+
+  notifies :restart, 'service[consul]'
 end
 
 remote_file '/etc/consul.d/service-consul.json' do
-  owner 'root'
-  group 'root'
+  owner 'consul'
+  group 'consul'
   mode '644'
 end
 
-execute 'Reload supervisor' do
-  user 'root'
-
-  command '/usr/bin/supervisorctl update'
+service 'consul' do
+  action [:enable, :start]
 end
 
 # iptables settings here:

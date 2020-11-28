@@ -13,11 +13,15 @@ end
 
 # Depoy `consul` service configuration for `gitea`:
 remote_file '/etc/consul.d/service-go-mmproxy.json' do
-  owner  'root'
-  group  'root'
+  owner  'consul'
+  group  'consul'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
+end
+
+service 'consul' do
+  action :nothing
 end
 
 # Firewall settings here:

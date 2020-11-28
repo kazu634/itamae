@@ -18,11 +18,8 @@ dns = run_command(cmd).stdout.chomp
 
 node.reverse_merge!({
   'consul' => {
-    'base_binary_url' => 'https://releases.hashicorp.com/consul/',
-    'arch' => node['kernel']['machine'] =~ /x86_64/ ? 'amd64' : '386',
-    'tmp_path' => '/tmp/itamae_tmp/consul.zip',
-    'manager' => true,
-    'manager_hosts' => '["192.168.10.110", "192.168.10.101", "192.168.10.111", "192.168.10.115"]',
+    'manager' => false,
+    'manager_hosts' => '["192.168.10.101", "192.168.10.251", "192.168.10.252"]',
     'ipaddr' => ipaddr,
     'dns' => dns
   }

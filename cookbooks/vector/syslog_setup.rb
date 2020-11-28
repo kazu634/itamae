@@ -50,13 +50,17 @@ end
 
 # Depoy `consul` service configuration for `loki`:
 template '/etc/consul.d/service-vector-syslog.json' do
-  owner  'root'
-  group  'root'
+  owner  'consul'
+  group  'consul'
   mode   '644'
 
   variables(ipaddr: node['vector']['ipaddr'])
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
+end
+
+service 'cosul' do
+  action :nothing
 end
 
 template '/etc/promtail/syslog.yaml' do

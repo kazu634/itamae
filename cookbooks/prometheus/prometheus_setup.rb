@@ -25,15 +25,15 @@ end
 
 # Depoy `consul` service configuration for `prometheus`:
 remote_file '/etc/consul.d/service-prometheus.json' do
-  owner  'root'
-  group  'root'
+  owner  'consul'
+  group  'consul'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :reload, 'service[consul]'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
+# Restart the `consul`:
+service 'consul' do
   action :nothing
 end
 

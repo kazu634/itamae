@@ -262,7 +262,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service)"'
+        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker)"'
         stages:
         - template:
             source: level
@@ -272,7 +272,7 @@ scrape_configs:
             level:
 
     - match:
-        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service)"'
+        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker)"'
         stages:
         - template:
             source: level
@@ -356,14 +356,14 @@ scrape_configs:
         job: consul
         hostname: <%= @HOSTNAME %>
         level: info
-        __path__: /var/log/supervisor/consul.log
+        __path__: /var/log/consul/consul-*.log
 
     pipeline_stages:
     - match:
         selector: '{job="consul"}'
         stages:
         - regex:
-            expression: '^ +(?P<timestamp>\d+-\d+-[^T]+T\d+:\d+:\d+\.\d+\+\d+) \[(?P<level>[^\]]+)\] *(?P<message>.+)$'
+            expression: '^(?P<timestamp>\d+-\d+-[^T]+T\d+:\d+:\d+\.\d+\+\d+) \[(?P<level>[^\]]+)\] *(?P<message>.+)$'
 
         - timestamp:
             source: timestamp

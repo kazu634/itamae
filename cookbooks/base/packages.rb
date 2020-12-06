@@ -31,7 +31,7 @@ DIST = run_command('lsb_release -cs').stdout.chomp
 
 # Add the public key file to install `git`
 execute "apt-key adv --keyserver #{KEYSRV} --recv-keys #{ID}" do
-  not_if 'apt-key list | grep E1DF1F24'
+  not_if 'apt-key list | grep "E1DF 1F24"'
 end
 
 # Deploy the `apt` sources:

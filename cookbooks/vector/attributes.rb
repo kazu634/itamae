@@ -18,6 +18,7 @@ node.reverse_merge!({
   'vector' => {
     'url' => 'https://github.com/timberio/vector/releases/download/',
     'ipaddr' => ipaddr,
-    'deb' => 'vector-amd64.deb'
+    'debPrefix' => 'vector-',
+    'debPostfix' => '-amd64.deb'
   },
 })

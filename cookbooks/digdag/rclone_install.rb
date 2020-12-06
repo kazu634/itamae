@@ -32,6 +32,7 @@ if result.exit_status != 0
 
   # Install:
   execute "unzip -d /opt/ -o #{TMP}"
+  execute 'rm -rf /opt/rclone'
   execute "mv /opt/#{rclone_dir} /opt/rclone"
 
   # Change Owner and Permissions:

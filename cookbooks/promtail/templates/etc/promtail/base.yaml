@@ -238,7 +238,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker)"'
+        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker|tmp-sanity|libcontainer container)"'
         stages:
         - template:
             source: level

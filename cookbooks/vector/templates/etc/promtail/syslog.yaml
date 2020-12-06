@@ -51,7 +51,7 @@ scrape_configs:
         action: drop
 
     - match:
-        selector: '{job="syslog", hostname="esxi-new", appname="Rhttpproxy"} |~ "(warning rhttpproxy|->)"'
+        selector: '{job="syslog", hostname="esxi-new", appname="Rhttpproxy"} |~ "(warning rhttpproxy|->|last log rotation time)"'
         action: drop
 
     - match:

@@ -29,37 +29,12 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="sudo"} |~ "/bin/sh"'
-        stages:
-        - drop:
-            expression: (CRON|sshd|session|securetty|systemd-logind)
-        - regex:
-            expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
-
-        - timestamp:
-            source: timestamp
-            format: Jan 2 15:04:05
-            location: Asia/Tokyo
-
-        - template:
-            source: message
-            template: 'USER={{ .user }} PWD={{ .pwd }} CMD={{ .cmd }}'
-
-        - template:
-            source: level
-            template: 'info'
-
-        - labels:
-            level:
-
-        - output:
-            source: message
+        selector: '{job="sudo"} |~ "(CRON|sshd|session|securetty|systemd-logind|/bin/sh)"'
+        action: drop
 
     - match:
         selector: '{job="sudo"} !~ "/bin/sh"'
         stages:
-        - drop:
-            expression: (CRON|sshd|session|securetty|systemd-logind)
         - regex:
             expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^ ]+ sudo: +(?P<user>[^ ]+) : TTY=(?P<tty>[^ ]+) ; PWD=(?P<pwd>[^ ]+) ; USER=(?P<foo>[^ ]+) ; COMMAND=(?P<cmd>.+)$'
 
@@ -94,12 +69,13 @@ scrape_configs:
 
     pipeline_stages:
     - match:
+        selector: '{job="sshd"} |~ "(CRON|sudo|session)"'
+        action: drop
+
+    - match:
         selector: '{job="sshd"}'
 
         stages:
-        - drop:
-            expression: (CRON|sudo|session)
-
         - regex:
             expression: '^(?P<timestamp>\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+) [^:]+: (?P<message>.+)$'
 
@@ -262,7 +238,7 @@ scrape_configs:
 
     pipeline_stages:
     - match:
-        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker)"'
+        selector: '{job="init"} |~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker|tmp-sanity|libcontainer container)"'
         stages:
         - template:
             source: level
@@ -272,7 +248,7 @@ scrape_configs:
             level:
 
     - match:
-        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker)"'
+        selector: '{job="init"} !~ "(apt|Message of the Day|motd-news|Temporary Directories|man-db|fwupd|Firmware update daemon|systemd-tmpfiles-clean.service|Rotate log files|logrotate.service|[Pp]ackage[Kk]it|/run/dbus/system_bus_socket|[Ss]nap|lxd|Reloading|Mount unit|ext4 Metadata|e2scrub_all.service|docker|tmp-sanity)"'
         stages:
         - template:
             source: level
@@ -344,7 +320,7 @@ scrape_configs:
         target_label: 'unit'
 
       - action: drop
-        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind|init|session|loki|monit).*'
+        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind|init|session|loki|monit|consul).*'
         source_labels:
         - __journal__systemd_unit
 

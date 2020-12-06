@@ -39,7 +39,7 @@ scrape_configs:
         action: drop
 
     - match:
-        selector: '{job="syslog", hostname="esxi-new", appname="Hostd"} |~ "(->|IpmiIfcOpenIpmiOpen|LikewiseGetDomainJoinInfo|AddVirtualMachine: VM|Solo.HttpSvc.HTTPService|VigorCallback received fault|vim.fault.InvalidPowerState|Unable to get resource settings for a powered on VM|VigorOnlineStatusCb|N7Vmacore16TimeoutExceptionE)"'
+        selector: '{job="syslog", hostname="esxi-new", appname="Hostd"} |~ "(->|IpmiIfcOpenIpmiOpen|LikewiseGetDomainJoinInfo|AddVirtualMachine: VM|Solo.HttpSvc.HTTPService|VigorCallback received fault|vim.fault.InvalidPowerState|Unable to get resource settings for a powered on VM|VigorOnlineStatusCb|N7Vmacore16TimeoutExceptionE|Calculated write I/O size)"'
         action: drop
 
     - match:

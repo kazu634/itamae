@@ -16,7 +16,7 @@ begin
     vtag     = $1 if response.body =~ %r{tag\/(v\d+\.\d+\.\d+)}
     tag      = vtag.sub(/^v/, '')
 
-    vector_deb = "#{node['vector']['deb']}"
+    vector_deb = "#{node['vector']['debPrefix']}#{tag}#{node['vector']['debPostfix']}"
     vector_url = "#{node['vector']['url']}/#{vtag}/#{vector_deb}"
   end
 rescue

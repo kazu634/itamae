@@ -320,7 +320,7 @@ scrape_configs:
         target_label: 'unit'
 
       - action: drop
-        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind|init|session|loki|monit).*'
+        regex: '.*(cron|supervisor|ssh|promtail|local|grafana|motd|dnsmasq|snapd|logind|init|session|loki|monit|consul).*'
         source_labels:
         - __journal__systemd_unit
 

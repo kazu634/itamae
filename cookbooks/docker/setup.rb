@@ -52,3 +52,17 @@ template '/etc/vector/docker.toml' do
 
   notifies :restart, 'service[vector-docker]'
 end
+
+# Deploy `systemd` configuration for `prometheus`:
+remote_file '/etc/systemd/system/vector-docker.service' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[vector-docker]'
+end
+
+# Service setting:
+service 'vector-docker' do
+  action [ :enable, :restart ]
+end

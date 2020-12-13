@@ -37,3 +37,18 @@ remote_file '/etc/cron.d/docker-housekeep' do
   group 'root'
   mode '644'
 end
+
+# Deploy config file for `vector`:
+template '/etc/vector/docker.toml' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  variables(LOKI: node['docker']['loki'],
+            HOSTNAME: node[:hostname]
+           )
+
+  source 'templates/etc/vector/docker.toml.erb'
+
+  notifies :restart, 'service[vector-docker]'
+end

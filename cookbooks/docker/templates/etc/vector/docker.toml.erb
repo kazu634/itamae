@@ -1,0 +1,22 @@
+data_dir = "/var/lib/vector"
+
+[sources.docker]
+  type = "docker"
+
+[transforms.docker-transform]
+  type = "remove_fields"
+  inputs = ["docker"]
+  fields = ["container_created_at", "container_id", "container_name"]
+
+[sinks.docker-logs]
+  type = "loki"
+  inputs = ["docker-transform"]
+  endpoint = "http://<%= @LOKI %>:3100"
+  healthcheck = true
+  remove_timestamp = true
+
+  encoding.codec = "text"
+
+  labels.level = "info"
+  labels.job = "docker"
+  labels.hostname = "<%= @HOSTNAME %>"

@@ -19,4 +19,10 @@ execute 'apt-get update' do
   not_if 'which docker'
 end
 
-package 'docker-ce'
+%w(docker-ce docker-ce-cli containerd.io).each do |p|
+  package p
+end
+
+service 'docker' do
+  action :nothing
+end

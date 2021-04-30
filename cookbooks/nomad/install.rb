@@ -17,4 +17,4 @@ end
 
 execute 'apt update'
 
-package 'consul'
+package 'nomad'

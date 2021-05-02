@@ -46,7 +46,17 @@ end
 git '/home/webadm/repo/nginx-config' do
   user 'webadm'
   repository 'https://gitea.kazu634.com/kazu634/nginx-config.git'
-
-  not_if 'test -e /home/webadm/repo/nginx-config'
 end
 
+execute '/home/webadm/repo/nginx-config/deploy.sh' do
+  user 'root'
+  cwd '/home/webadm/repo/nginx-config/'
+end
+
+service 'consul-template' do
+  action :restart
+end
+
+service 'nginx' do
+  action :restart
+end

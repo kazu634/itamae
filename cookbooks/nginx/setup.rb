@@ -1,37 +1,3 @@
-# Create the necessary directories:
-%w( body fastcgi proxy scgi uwsgi ).each do |d|
-  directory "/var/lib/nginx/#{d}" do
-    owner 'www-data'
-    group 'root'
-    mode '755'
-  end
-end
-
-link '/etc/nginx/sites-enabled' do
-  to '/home/webadm/repo/nginx-config/sites-available'
-  user 'root'
-
-  notifies :reload, 'service[nginx]'
-end
-
-link '/etc/nginx/stream-enabled' do
-  to '/home/webadm/repo/nginx-config/stream-available'
-  user 'root'
-
-  notifies :reload, 'service[nginx]'
-end
-
-# Deploy the nginx configuration files:
-%w(nginx.conf basic-auth).each do |f|
-  remote_file "/etc/nginx/#{f}" do
-    owner 'root'
-    group 'root'
-    mode '644'
-
-    notifies :reload, 'service[nginx]'
-  end
-end
-
 # Log rotation setting:
 remote_file '/etc/logrotate.d/nginx' do
   owner 'root'

@@ -35,7 +35,9 @@ directory node['alertmanager_webhook']['storage'] do
   mode '755'
 end
 
-execute "tar zxf #{TMP} -C #{node['alertmanager_webhook']['storage']}"
+execute "unzip #{TMP} -d #{node['alertmanager_webhook']['storage']}" do
+  not_if "test -e #{node['alertmanager_webhook']['storage']}alertmanager-webhook-logger"
+end
 
 # Change Owner and Permissions:
 file "#{node['alertmanager_webhook']['storage']}alertmanager-webhook-logger" do

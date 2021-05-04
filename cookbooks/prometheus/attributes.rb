@@ -34,7 +34,7 @@ node.reverse_merge!({
   'alertmanager_webhook' => {
     'url' => 'https://github.com/tomtom-international/alertmanager-webhook-logger/releases/download/',
     'prefix' => 'alertmanager-webhook-logger-',
-    'postfix' => '.tar.gz',
+    'postfix' => '.zip',
     'storage' => '/opt/prometheus/',
     'location' => '/usr/local/bin/'
   },

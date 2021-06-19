@@ -4,6 +4,6 @@
 node.reverse_merge!({
   'nomad' => {
     'manager' => false,
-    'client' => true
+    'client' => false
   }
 })

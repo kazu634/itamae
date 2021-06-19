@@ -2,6 +2,8 @@ include_recipe './attributes.rb'
 
 include_recipe './install.rb'
 
-include_recipe './setup.rb'
+if node['nomad']['manager'] || node['nomad']['client']
+  include_recipe './setup.rb'
 
-include_recipe './shared_dir.rb'
+  include_recipe './shared_dir.rb'
+end

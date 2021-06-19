@@ -21,6 +21,8 @@ end
 link '/usr/local/bin/embulk' do
   user 'root'
   to TARGET
+
+  force true
 end
 
 package 'default-jre' do

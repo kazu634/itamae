@@ -19,12 +19,14 @@ remote_file '/etc/nomad.d/datadir.hcl' do
 end
 
 if node['nomad']['manager']
-  remote_file '/etc/nomad.d/server.hcl' do
-    owner 'nomad'
-    group 'nomad'
-    mode '664'
+  %w( server.hcl acl.hcl ).each do |conf|
+    remote_file "/etc/nomad.d/#{conf}" do
+      owner 'nomad'
+      group 'nomad'
+      mode '664'
 
-    notifies :restart, 'service[nomad]'
+      notifies :restart, 'service[nomad]'
+    end
   end
 end
 

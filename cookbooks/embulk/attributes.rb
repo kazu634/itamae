@@ -6,7 +6,7 @@ ipaddr = run_command(cmd).stdout.chomp
 
 node.reverse_merge!({
   'embulk' => {
-    'base_binary_url' => 'https://dl.bintray.com/embulk/maven/embulk-',
+    'base_binary_url' => 'https://github.com/embulk/embulk/releases/download/v',
     'version' => '0.9.23',
     'extension' => '.jar',
     'install_path' => '/opt/embulk'

@@ -3,6 +3,7 @@ include_recipe './attributes.rb'
 include_recipe './install.rb'
 
 include_recipe './setup.rb'
+include_recipe './mc.rb'
 
 include_recipe './rclone_install.rb'
 include_recipe './rclone_setup.rb'

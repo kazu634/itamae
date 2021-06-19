@@ -5,13 +5,11 @@ directory node['embulk']['install_path'] do
   mode '755'
 end
 
-URL = "#{node['embulk']['base_binary_url']}#{node['embulk']['version']}#{node['embulk']['extension']}"
+URL = "#{node['embulk']['base_binary_url']}#{node['embulk']['version']}/embulk-#{node['embulk']['version']}#{node['embulk']['extension']}"
 TARGET = "#{node['embulk']['install_path']}/embulk"
 
 # Download and install:
-execute "wget #{URL} -O #{TARGET}" do
-  not_if "test -e #{TARGET}"
-end
+execute "wget #{URL} -O #{TARGET}"
 
 file TARGET do
   owner 'root'

@@ -55,6 +55,6 @@ file '/etc/fstab' do
   not_if 'grep apt-mirror /etc/fstab'
 end
 
-execute 'mount -a' do
+execute 'mount -a || true' do
   not_if 'df -h | grep shared'
 end

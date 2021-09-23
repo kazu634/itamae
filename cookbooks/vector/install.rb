@@ -8,7 +8,8 @@ vtag       = ''
 begin
   require 'net/http'
 
-  uri = URI.parse('https://github.com/timberio/vector/releases/latest')
+
+  uri = URI.parse('https://github.com/vectordotdev/vector/releases/latest')
 
   Timeout.timeout(3) do
     response = Net::HTTP.get_response(uri)

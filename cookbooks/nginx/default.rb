@@ -33,10 +33,14 @@ end
 end
 
 # Prerequisites for Building nginx:
-include_recipe './webadm.rb'
+if node['nginx']['skip_webadm']
+  include_recipe './webadm.rb'
+end
 
 # Install Let's Encrypt:
-include_recipe './lego.rb'
+if node['nginx']['skip_lego']
+  include_recipe './lego.rb'
+end
 
 # Build nginx:
 include_recipe './build.rb'

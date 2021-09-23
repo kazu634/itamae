@@ -16,7 +16,7 @@ ipaddr = run_command(cmd).stdout.chomp
 
 node.reverse_merge!({
   'vector' => {
-    'url' => 'https://github.com/timberio/vector/releases/download/',
+    'url' => 'https://github.com/vectordotdev/vector/releases/download/',
     'ipaddr' => ipaddr,
     'debPrefix' => 'vector-',
     'debPostfix' => '-amd64.deb'

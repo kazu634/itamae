@@ -5,12 +5,40 @@ data_dir = "/var/lib/vector"
   mode    = "tcp"         # required
   type    = "syslog"      # required
 
-[sinks.syslog-file]
-  # General
-  type        = "file"                                # required
-  inputs      = ["syslog"]                            # required
-  healthcheck = true                                  # optional, default
-  path        = "/var/log/vector/syslog.log"          # required
+[transforms.reformat-syslog]
+  type = "remap"
+  inputs = [ "syslog" ]
+  source = """
+    if contains(.severity, "err") {
+      .severity = "error"
+    }
 
-  # Encoding
-  encoding.codec = "ndjson" # required
+    .sev_filter = !includes(["info", "debug", "notice"], .severity)
+    .msg_filter, err = !match_any(.message, [r'->', r'already registered', r'pam_unix(sudo:session)', r'/opt/vyatta/sbin/ubnt_vtysh', r'ERROR_FILE_NOT_FOUND', r'IpmiIfcOpenIpmiOpen', r'REALLOCATED SECTOR CT below threshold'])
+  """
+
+[transforms.filter-syslog]
+  type = "filter"
+  inputs = [ "reformat-syslog" ]
+  condition = '.sev_filter == true && .msg_filter == true'
+
+[sinks.docker-logs]
+  type             = "loki"
+  inputs           = ["filter-syslog"]
+  endpoint         = "http://192.168.10.101:3100"
+  healthcheck      = true
+  remove_timestamp = true
+
+  encoding.codec   = "text"
+
+  labels.level     = "{{ severity }}"
+  labels.job       = "syslog"
+  labels.hostname  = "{{ host }}"
+
+[sinks.file]
+  type = "file"
+  inputs = ["reformat-syslog"]
+  compression = "none"
+  path = "/tmp/vector-%Y-%m-%d.log"
+  encoding = "ndjson"
+

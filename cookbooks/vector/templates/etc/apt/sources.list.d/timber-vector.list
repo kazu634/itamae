@@ -1,0 +1,3 @@
+deb https://repositories.timber.io/public/vector/deb/ubuntu <%= @distribution %> main
+
+deb-src https://repositories.timber.io/public/vector/deb/ubuntu <%= @distribution %> main

@@ -6,3 +6,8 @@
     mode   '0755'
   end
 end
+
+# Stop vector default service:
+service 'vector' do
+  action :disable
+end

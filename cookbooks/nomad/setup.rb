@@ -1,4 +1,6 @@
 # Kernel parameters:
+execute 'modprobe br_netfilter'
+
 remote_file '/etc/sysctl.d/90-nomad.conf' do
   owner 'root'
   group 'root'

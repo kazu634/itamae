@@ -67,3 +67,46 @@ service 'nomad' do
   action [:enable, :start]
 end
 
+# Deploy `promtail` config:
+HOSTNAME = run_command('uname -n').stdout.chomp
+
+template '/etc/promtail/nomad.yaml' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  variables(HOSTNAME: HOSTNAME,  LOKIENDPOINT: node['nomad']['lokiendpoint'])
+
+  notifies :restart, 'service[promtail-nomad]'
+end
+
+# Deploy the `systemd` configuration:
+remote_file '/lib/systemd/system/promtail-nomad.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+# Service setting:
+service 'promtail-nomad' do
+  action [ :enable, :restart ]
+end
+
+remote_file '/etc/rsyslog.d/30-nomad.conf' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action [ :nothing ]
+end
+
+# Deploy the `logrotated` configuration:
+remote_file '/etc/logrotate.d/nomad' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end

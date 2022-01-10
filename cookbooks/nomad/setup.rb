@@ -91,3 +91,15 @@ end
 service 'promtail-nomad' do
   action [ :enable, :restart ]
 end
+
+remote_file '/etc/rsyslog.d/30-nomad.conf' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action [ :nothing ]
+end

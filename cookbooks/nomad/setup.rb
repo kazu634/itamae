@@ -79,3 +79,15 @@ template '/etc/promtail/nomad.yaml' do
 
   notifies :restart, 'service[promtail-nomad]'
 end
+
+# Deploy the `systemd` configuration:
+remote_file '/lib/systemd/system/promtail-nomad.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+# Service setting:
+service 'promtail-nomad' do
+  action [ :enable, :restart ]
+end

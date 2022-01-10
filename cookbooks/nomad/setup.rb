@@ -103,3 +103,10 @@ end
 service 'rsyslog' do
   action [ :nothing ]
 end
+
+# Deploy the `logrotated` configuration:
+remote_file '/etc/logrotate.d/nomad' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end

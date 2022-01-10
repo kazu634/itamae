@@ -1,0 +1,88 @@
+server:
+  disable: true
+
+positions:
+  filename: /var/opt/promtail/promtail_nomad_position.yaml
+
+clients:
+  - url: http://<%= @LOKIENDPOINT %>/loki/api/v1/push
+
+scrape_configs:
+  - job_name: nomad
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: nomad
+        hostname: <%= @HOSTNAME %>
+        __path__: /var/log/nomad.log
+
+    pipeline_stages:
+    - match:
+        selector: '{job="nomad"} != "task="'
+        stages:
+        - regex:
+            expression: '^\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ nomad[^:]+: +(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+\+\d{4}) \[(?P<level>[^\]]+)\] +(?P<message>.*)$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.000-0700
+            location: Asia/Tokyo
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - labels:
+            level:
+
+        - output:
+            source: message
+
+    - match:
+        selector: '{job="nomad"} |~ "task=.*timestamp="'
+        stages:
+        - regex:
+            expression: '^\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ nomad[^:]+: +\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+\+\d{4} \[(?P<level>[^\]]+)\] +(?P<message>.*) task=(?P<task>[^ ]+) .* timestamp=(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+\+\d{4})$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.000-0700
+            location: Asia/Tokyo
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - labels:
+            level:
+            task:
+
+        - output:
+            source: message
+
+    - match:
+        selector: '{job="nomad"} |~ "task=.*reason="'
+        stages:
+        - regex:
+            expression: '^\w+ +[0-9]+ [0-9]+:[0-9]+:[0-9]+ [^ ]+ nomad[^:]+: +(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}\+\d{4}) \[(?P<level>[^\]]+)\] +(?P<message>.*) task=(?P<task>.*) reason="(?P<reason>.*)"$'
+
+        - timestamp:
+            source: timestamp
+            format: 2006-01-02T15:04:05.000-0700
+            location: Asia/Tokyo
+
+        - template:
+            source: msg
+            template: 'Message={{ .message }} Reason={{ .reason }}'
+
+        - template:
+            source: level
+            template: '{{ ToLower .level }}'
+
+        - labels:
+            level:
+            task:
+
+        - output:
+            source: msg

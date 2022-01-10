@@ -67,3 +67,15 @@ service 'nomad' do
   action [:enable, :start]
 end
 
+# Deploy `promtail` config:
+HOSTNAME = run_command('uname -n').stdout.chomp
+
+template '/etc/promtail/nomad.yaml' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  variables(HOSTNAME: HOSTNAME,  LOKIENDPOINT: node['nomad']['lokiendpoint'])
+
+  notifies :restart, 'service[promtail-nomad]'
+end

@@ -25,7 +25,7 @@ if node['nomad']['manager']
 end
 
 if node['nomad']['client']
-  %w( /etc/nomad.d/client.hcl /etc/nomad.d/docker-registry.hcl ).each do |conf|
+  %w( /etc/nomad.d/client.hcl  ).each do |conf|
     remote_file conf do
       owner 'nomad'
       group 'nomad'

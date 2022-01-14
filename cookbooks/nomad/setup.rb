@@ -12,14 +12,6 @@ file '/etc/nomad.d/nomad.hcl' do
   action :delete
 end
 
-remote_file '/etc/nomad.d/datadir.hcl' do
-  owner 'nomad'
-  group 'nomad'
-  mode '664'
-
-  notifies :restart, 'service[nomad]'
-end
-
 if node['nomad']['manager']
   %w( server.hcl acl.hcl ).each do |conf|
     remote_file "/etc/nomad.d/#{conf}" do
@@ -33,7 +25,7 @@ if node['nomad']['manager']
 end
 
 if node['nomad']['client']
-  %w( /etc/nomad.d/client.hcl /etc/nomad.d/docker-registry.hcl ).each do |conf|
+  %w( /etc/nomad.d/client.hcl  ).each do |conf|
     remote_file conf do
       owner 'nomad'
       group 'nomad'

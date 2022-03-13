@@ -21,5 +21,6 @@ node.reverse_merge!({
     'manager' => false,
     'ipaddr' => ipaddr,
     'hostname' => hostname,
+    'ips' => ['192.168.10.141', '192.168.10.142', '192.168.10.143'],
   }
 })

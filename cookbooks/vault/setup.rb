@@ -12,3 +12,11 @@ directory '/etc/vault.d/policies' do
   group 'vault'
   mode '755'
 end
+
+%w( consul-auto-config consul-connect-vault ).each do |conf|
+  remote_file "/etc/vault.d/policies/#{conf}.hcl" do
+    owner 'vault'
+    group 'vault'
+    mode '644'
+  end
+end

@@ -14,9 +14,12 @@ else
 end
 ipaddr = run_command(cmd).stdout.chomp
 
+hostname = run_command('uname -n').stdout.chomp
+
 node.reverse_merge!({
   'vault' => {
     'manager' => false,
     'ipaddr' => ipaddr,
+    'hostname' => hostname,
   }
 })

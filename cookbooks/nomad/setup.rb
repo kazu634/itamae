@@ -22,6 +22,12 @@ if node['nomad']['manager']
       notifies :restart, 'service[nomad]'
     end
   end
+
+  directory '/etc/nomad.d/policies' do
+    owner 'nomad'
+    group 'nomad'
+    mode '644'
+  end
 end
 
 if node['nomad']['client']

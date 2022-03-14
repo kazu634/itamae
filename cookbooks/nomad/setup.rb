@@ -46,6 +46,12 @@ if node['nomad']['client']
       notifies :restart, 'service[nomad]'
     end
   end
+
+  directory '/etc/nomad.d/jobs' do
+    owner 'nomad'
+    group 'nomad'
+    mode '755'
+  end
 end
 
 # Create directory:

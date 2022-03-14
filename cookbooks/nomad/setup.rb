@@ -26,6 +26,12 @@ if node['nomad']['manager']
   directory '/etc/nomad.d/policies' do
     owner 'nomad'
     group 'nomad'
+    mode '755'
+  end
+
+  remote_file '/etc/nomad.d/policies/anonymous.hcl' do
+    owner 'nomad'
+    group 'nomad'
     mode '644'
   end
 end

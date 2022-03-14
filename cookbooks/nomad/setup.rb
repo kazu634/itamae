@@ -22,6 +22,18 @@ if node['nomad']['manager']
       notifies :restart, 'service[nomad]'
     end
   end
+
+  directory '/etc/nomad.d/policies' do
+    owner 'nomad'
+    group 'nomad'
+    mode '755'
+  end
+
+  remote_file '/etc/nomad.d/policies/anonymous.hcl' do
+    owner 'nomad'
+    group 'nomad'
+    mode '644'
+  end
 end
 
 if node['nomad']['client']
@@ -32,6 +44,20 @@ if node['nomad']['client']
       mode '664'
 
       notifies :restart, 'service[nomad]'
+    end
+  end
+
+  directory '/etc/nomad.d/jobs' do
+    owner 'nomad'
+    group 'nomad'
+    mode '755'
+  end
+
+  %w( countdash.hcl countdash-intention.hcl ).each do |f|
+    remote_file "/etc/nomad.d/jobs/#{f}" do
+      owner 'nomad'
+      group 'nomad'
+      mode '644'
     end
   end
 end

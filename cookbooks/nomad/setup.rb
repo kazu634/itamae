@@ -52,6 +52,14 @@ if node['nomad']['client']
     group 'nomad'
     mode '755'
   end
+
+  %w( countdash.hcl countdash-intention.hcl ).each do |f|
+    remote_file "/etc/nomad.d/jobs/#{f}" do
+      owner 'nomad'
+      group 'nomad'
+      mode '644'
+    end
+  end
 end
 
 # Create directory:

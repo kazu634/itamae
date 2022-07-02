@@ -1,0 +1,16 @@
+/opt/vault/logs/audit.log {
+  rotate 30
+  daily
+  # Do not execute rotate if the log file is empty.
+  notifempty
+  missingok
+  compress
+  # Set compress on next rotate cycl to prevent entry loss when performing compression.
+  delaycompress
+  postrotate
+    /usr/bin/pkill -HUP vault
+  endscript
+  extension log
+  dateext
+  dateformat %Y-%m-%d.
+}

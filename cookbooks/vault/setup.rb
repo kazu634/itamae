@@ -20,3 +20,9 @@ end
     mode '644'
   end
 end
+
+remote_file '/etc/logrotate.d/vault' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end

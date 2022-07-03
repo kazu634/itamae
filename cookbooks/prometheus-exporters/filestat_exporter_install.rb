@@ -12,7 +12,7 @@ begin
   Timeout.timeout(3) do
     response = Net::HTTP.get_response(uri)
 
-    vtag = $1 if response.body =~ %r{tag\/(v\d+\.\d+\.\d+)}
+    vtag = $1 if response['location'] =~ %r{tag\/(v\d+\.\d+\.\d+)}
 
     filestat_exporter_bin = "#{node['filestat_exporter']['prefix']}#{vtag}#{node['filestat_exporter']['postfix']}"
     filestat_exporter_url = "#{node['filestat_exporter']['url']}/#{vtag}/#{filestat_exporter_bin}"

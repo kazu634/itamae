@@ -1,6 +1,6 @@
 # Deploy .vim configuration
 git '/home/kazu634/.vim' do
-  repository 'git://github.com/kazu634/vim.git'
+  repository 'https://github.com/kazu634/vim.git'
   user 'kazu634'
 end
 
@@ -12,6 +12,6 @@ directory '/home/kazu634/.vim/bundle/' do
 end
 
 git '/home/kazu634/.vim/bundle/neobundle.vim' do
-  repository 'git://github.com/Shougo/neobundle.vim'
+  repository 'https://github.com/Shougo/neobundle.vim'
   user 'kazu634'
 end

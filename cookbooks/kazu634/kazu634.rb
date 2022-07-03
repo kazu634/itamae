@@ -21,7 +21,7 @@ end
 
 # `git-now` deployment:
 git '/home/kazu634/repo/git-now' do
-  repository 'git://github.com/iwata/git-now.git'
+  repository 'https://github.com/iwata/git-now.git'
   user 'kazu634'
 
   recursive true
@@ -36,7 +36,7 @@ end
 
 # Deploy dot files:
 git '/home/kazu634/repo/dotfiles' do
-  repository 'git://github.com/kazu634/dotfiles.git'
+  repository 'https://github.com/kazu634/dotfiles.git'
   user 'kazu634'
 end
 
@@ -49,7 +49,7 @@ end
 
 # Deploy `zplug`:
 git '/home/kazu634/.zplug' do
-  repository 'git://github.com/zplug/zplug.git'
+  repository 'https://github.com/zplug/zplug.git'
   user 'kazu634'
 end
 

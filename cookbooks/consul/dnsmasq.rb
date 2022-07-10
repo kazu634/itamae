@@ -13,7 +13,7 @@ when "20.04", "22.04"
     group 'root'
     mode '644'
 
-  variables(dns: node['consul']['dns'])
+    variables(dns: node['consul']['dns'])
 
     notifies :restart, 'service[systemd-resolved]', :immediately
   end

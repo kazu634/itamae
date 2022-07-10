@@ -1,3 +1,25 @@
+# Create directories
+%w( certs howto misc policies tokens ).each do |d|
+  directory "/etc/consul.d/#{d}" do
+    owner 'consul'
+    group 'consul'
+    mode  '0755'
+  end
+end
+
+# deploy certificates
+if node['consul']['manager']
+else
+  encrypted_remote_file '/etc/consul.d/certs/consul-agent-ca.pem' do
+    owner 'consul'
+    group 'consul'
+    mode '0444'
+
+    source   'files/etc/consul.d/certs/consul-agent-ca.pem'
+    password ENV['ITAMAE_PASSWORD']
+  end
+end
+
 if node['consul']['manager']
   SRC = 'consul-server.hcl.erb'
 else
@@ -12,6 +34,8 @@ template '/etc/consul.d/consul.hcl' do
   variables(manager: node['consul']['manager'],
             manager_hosts: node['consul']['manager_hosts'],
             ipaddr: node['consul']['ipaddr'],
+            encrypt: node['consul']['encrypt'],
+            token: node['consul']['token'],
            )
 
   source "templates/etc/consul.d/#{SRC}"
@@ -44,7 +68,7 @@ service 'consul' do
 end
 
 # iptables settings here:
-%w( 8300/tcp 8301/tcp 8301/udp 8500/tcp ).each do |port|
+%w( 8300/tcp 8301/tcp 8301/udp 8500/tcp 8502/tcp ).each do |port|
   execute "ufw allow #{port}" do
     user 'root'
 

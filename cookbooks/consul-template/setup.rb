@@ -1,6 +1,6 @@
 # Create `/var/log/vector`:
-%w( /etc/consul-template.d/conf /etc/consul-template.d/templates ).each do |d|
-  directory d do
+%w( conf templates tokens ).each do |d|
+  directory "/etc/consul-template.d/#{d}" do
     owner  'root'
     group  'root'
     mode   '0755'

@@ -44,7 +44,7 @@ service 'consul' do
 end
 
 # iptables settings here:
-%w( 8300/tcp 8301/tcp 8301/udp 8500/tcp ).each do |port|
+%w( 8300/tcp 8301/tcp 8301/udp 8500/tcp 8502/tcp ).each do |port|
   execute "ufw allow #{port}" do
     user 'root'
 

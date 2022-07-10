@@ -2,7 +2,7 @@
 Description="HashiCorp Consul - A service mesh solution"
 Documentation=https://www.consul.io/
 Requires=network-online.target
-After=network-online.target
+After=network-online.target vault-agent-consul-jwt.target
 ConditionFileNotEmpty=/etc/consul.d/consul.hcl
 
 [Service]

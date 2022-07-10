@@ -1,0 +1,13 @@
+[Unit]
+Description=Vault Agent
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+EnvironmentFile=-/etc/default/vault-agent-consul-jwt
+Restart=on-failure
+ExecStart=/usr/bin/vault agent -config=/etc/vault.d/agent/consul-jwt.hcl
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

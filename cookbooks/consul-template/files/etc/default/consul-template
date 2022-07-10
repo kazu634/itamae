@@ -1,1 +1,2 @@
 OPTIONS="-syslog -syslog-name=consul-template"
+VAULT_ADDR="http://192.168.10.142:8200"

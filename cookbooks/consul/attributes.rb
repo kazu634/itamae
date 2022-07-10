@@ -2,7 +2,7 @@
 # Specifying the default settings:
 # -------------------------------------------
 case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
-when "20.04"
+when "20.04", "22.04"
   cmd = 'LANG=C ip a | grep "inet " | grep -v -E "(127|172)" | cut -d" " -f6 | perl -pe "s/\/.+//g"'
 
 when "18.04"

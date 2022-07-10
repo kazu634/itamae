@@ -7,7 +7,7 @@ package 'dnsmasq'
 end
 
 case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
-when "20.04"
+when "20.04", "22.04"
   template '/etc/systemd/resolved.conf' do
     owner 'root'
     group 'root'

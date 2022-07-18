@@ -25,6 +25,13 @@ link '/usr/local/bin/embulk' do
   force true
 end
 
-package 'default-jre' do
-  action :install
+case node['platform_version'].to_f
+when 22.04
+  package 'openjdk-8-jre' do
+    action :install
+  end
+else
+  package 'default-jre' do
+    action :install
+  end
 end

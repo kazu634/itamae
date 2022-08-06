@@ -1,4 +1,4 @@
 vendor
 *.swp
 .bundle/
-nodes/1*.json
+nodes/*.json

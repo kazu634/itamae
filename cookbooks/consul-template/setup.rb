@@ -33,6 +33,12 @@ remote_file '/etc/rsyslog.d/30-consul-template.conf' do
   notifies :restart, 'service[rsyslog]', :immediately
 end
 
+remote_file '/etc/logrotate.d/consul-template' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
 service 'rsyslog' do
   action [ :nothing ]
 end

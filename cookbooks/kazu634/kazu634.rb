@@ -36,7 +36,7 @@ end
 
 # Deploy dot files:
 git '/home/kazu634/repo/dotfiles' do
-  repository 'https://github.com/kazu634/dotfiles.git'
+  repository 'https://gitea.kazu634.com/kazu634/dotfiles.git'
   user 'kazu634'
 end
 

@@ -36,7 +36,7 @@ end
 
 # Deploy dot files:
 git '/home/kazu634/repo/dotfiles' do
-  repository 'https://github.com/kazu634/dotfiles.git'
+  repository 'https://gitea.kazu634.com/kazu634/dotfiles.git'
   user 'kazu634'
 end
 
@@ -51,6 +51,19 @@ end
 git '/home/kazu634/.zplug' do
   repository 'https://github.com/zplug/zplug.git'
   user 'kazu634'
+end
+
+# Starship config
+directory '/home/kazu634/.config' do
+  owner 'kazu634'
+  group 'kazu634'
+  mode  '0740'
+end
+
+remote_file '/home/kazu634/.config/starship.toml' do
+  owner 'kazu634'
+  group 'kazu634'
+  mode  '0640'
 end
 
 # sudoers

@@ -63,6 +63,9 @@ include_recipe './mc.rb'
 # Install lsyncd command:
 include_recipe './lsyncd.rb'
 
+# Install starship command:
+include_recipe './starship.rb'
+
 # recipes for Ubuntu 16.04
 if node['platform_version'].to_f == 16.04
   # ntp configurations

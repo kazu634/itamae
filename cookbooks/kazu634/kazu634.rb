@@ -53,6 +53,19 @@ git '/home/kazu634/.zplug' do
   user 'kazu634'
 end
 
+# Starship config
+directory '/home/kazu634/.config' do
+  owner 'kazu634'
+  group 'kazu634'
+  mode  '0740'
+end
+
+remote_file '/home/kazu634/.config/starship.toml' do
+  owner 'kazu634'
+  group 'kazu634'
+  mode  '0640'
+end
+
 # sudoers
 remote_file '/etc/sudoers.d/kazu634' do
   owner 'root'

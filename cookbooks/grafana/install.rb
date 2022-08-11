@@ -10,7 +10,9 @@ execute 'curl https://packages.grafana.com/gpg.key | apt-key add -' do
   not_if 'apt-key list | grep grafana'
 end
 
-execute 'apt update'
+execute 'apt update' do
+  not_if 'which grafana-server'
+end
 
 package 'grafana' do
   action :install

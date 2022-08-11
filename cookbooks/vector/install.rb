@@ -17,6 +17,8 @@ template '/etc/apt/sources.list.d/timber-vector.list' do
   variables(distribution: DIST)
 end
 
-execute 'apt update'
+execute 'apt update' do
+  not_if 'which vector'
+end
 
 package 'vector'

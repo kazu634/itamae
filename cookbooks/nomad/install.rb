@@ -15,6 +15,8 @@ template '/etc/apt/sources.list.d/hashicorp.list' do
   variables(distribution: DIST)
 end
 
-execute 'apt update'
+execute 'apt update' do
+  not_if 'which nomad'
+end
 
 package 'nomad'

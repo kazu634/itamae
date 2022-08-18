@@ -5,9 +5,6 @@ include_recipe './install.rb'
 include_recipe './setup.rb'
 include_recipe './mc.rb'
 
-include_recipe './rclone_install.rb'
-include_recipe './rclone_setup.rb'
-
 # AWS EC2 Swap Setting:
 if !node['is_ec2']
   include_recipe './shared_dir.rb'

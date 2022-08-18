@@ -32,7 +32,7 @@ remote_file '/root/.ssh/config' do
 end
 
 
-%w(filter-column filter-row output-mysql output-postgresql input-mysql filter-gsub).each do |p|
+%w(filter-column filter-row output-mysql output-postgresql input-mysql filter-gsub filter-eval).each do |p|
   execute "embulk gem install embulk-#{p}" do
     user 'root'
 

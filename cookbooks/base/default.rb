@@ -66,15 +66,6 @@ include_recipe './lsyncd.rb'
 # Install starship command:
 include_recipe './starship.rb'
 
-# recipes for Ubuntu 16.04
-if node['platform_version'].to_f == 16.04
-  # ntp configurations
-  include_recipe './ntp.rb'
-
-  # misc recipe
-  include_recipe './unnecessary.rb'
-end
-
 # recipes for Ubuntu 20.04
 if node['platform_version'].to_f == 20.04
   remote_file '/etc/multipath.conf' do

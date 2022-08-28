@@ -66,8 +66,9 @@ include_recipe './lsyncd.rb'
 # Install starship command:
 include_recipe './starship.rb'
 
-# recipes for Ubuntu 20.04
-if node['platform_version'].to_f == 20.04
+# recipes for Ubuntu 20.04 and later
+case node['platform_version']
+when "20.04", "22.04"
   remote_file '/etc/multipath.conf' do
     owner 'root'
     group 'root'

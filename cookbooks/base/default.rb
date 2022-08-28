@@ -80,6 +80,20 @@ when "20.04", "22.04"
   service 'multipath-tools' do
     action :nothing
   end
+
+  package 'systemd-timesyncd'
+
+  service 'systemd-timesyncd' do
+    action :enable
+  end
+
+  remote_file '/etc/systemd/timesyncd.conf' do
+    owner 'root'
+    group 'root'
+    mode '0644'
+
+    notifies :restart, 'service[systemd-timesyncd]'
+  end
 end
 
 # AWS EC2 Swap Setting:

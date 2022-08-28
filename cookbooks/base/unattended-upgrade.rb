@@ -45,7 +45,7 @@ when "18.04"
     not_if 'test -e /var/log/cron-apt/log'
   end
 
-when '20.04'
+when '20.04', '22.04'
   %w(20auto-upgrades 50unattended-upgrades).each do |conf|
     remote_file "/etc/apt/apt.conf.d/#{conf}" do
       owner 'root'

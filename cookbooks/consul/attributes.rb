@@ -13,7 +13,7 @@ else
 end
 ipaddr = run_command(cmd).stdout.chomp
 
-cmd = 'grep nameserver /run/systemd/resolve/resolv.conf | grep -v 8.8.8.8 | grep -v 127.0.0.1 | perl -pe "s/nameserver //g" | perl -pe "s/\n/ /g"'
+cmd = 'grep nameserver /run/systemd/resolve/resolv.conf | grep -v 8.8.8.8 | grep -v 127.0.0.1 | perl -pe "s/nameserver //g" | sort | uniq | perl -pe "s/\n/ /g"'
 dns = run_command(cmd).stdout.chomp
 
 node.reverse_merge!({

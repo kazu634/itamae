@@ -13,7 +13,7 @@ when "22.04"
     group 'root'
     mode '644'
 
-    source 'templates/etc/systemd/resolved.conf.2022.erb'
+    source 'templates/etc/systemd/resolved.conf.2204.erb'
     variables(dns: node['consul']['dns'])
 
     notifies :restart, 'service[systemd-resolved]', :immediately

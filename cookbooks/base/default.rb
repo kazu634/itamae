@@ -86,11 +86,24 @@ when "20.04", "22.04"
   service 'systemd-timesyncd' do
     action :enable
   end
+end
 
+case node['platform_version']
+when "20.04"
   remote_file '/etc/systemd/timesyncd.conf' do
     owner 'root'
     group 'root'
     mode '0644'
+
+    notifies :restart, 'service[systemd-timesyncd]'
+  end
+when "22.04"
+  remote_file '/etc/systemd/timesyncd.conf' do
+    owner 'root'
+    group 'root'
+    mode '0644'
+
+    source 'files/etc/systemd/timesyncd.2204.conf'
 
     notifies :restart, 'service[systemd-timesyncd]'
   end

@@ -38,7 +38,7 @@ begin
   Timeout.timeout(3) do
     response = Net::HTTP.get_response(uri)
 
-    if response.body =~ %r{tag\/(v\d+\.\d+\.\d+)}
+    if response['location'] =~ %r{tag\/(v\d+\.\d+\.\d+)}
       vtag        = $1
       tag_version = vtag.sub('v', '')
 

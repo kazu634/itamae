@@ -1,12 +1,16 @@
 data_dir = "/var/lib/vector"
 
 [sources.docker]
-  type = "docker"
+  type = "docker_logs"
 
 [transforms.docker-transform]
-  type = "remove_fields"
+  type = "remap"
   inputs = ["docker"]
-  fields = ["container_created_at", "container_id", "container_name"]
+  source = '''
+    del(.container_created_at)
+    del(.container_id)
+    del(.container_name)
+  '''
 
 [sinks.docker-logs]
   type = "loki"

@@ -47,25 +47,34 @@ service 'digdag' do
   action [ :enable, :restart ]
 end
 
-# Deploy /etc/hosts file:
-HOSTNAME = run_command('uname -n').stdout.chomp
-
-template '/etc/promtail/digdag.yaml' do
+# Deploy `rsyslog` config file for `digdag`:
+remote_file '/etc/rsyslog.d/30-digdag.conf' do
   owner 'root'
-    group 'root'
-      mode '644'
+  group 'root'
+  mode '644'
 
-  variables(HOSTNAME: HOSTNAME, LOKIENDPOINT: node['promtail']['lokiendpoint'])
-  end
+  notifies :restart, 'service[rsyslog]', :immediately
+end
+
+# Deploy the config file for `vector`:
+remote_file '/etc/vector/digdag.toml' do
+  owner 'root'
+  group 'root'
+  mode  '644'
+end
 
 # Deploy the `systemd` configuration:
-remote_file '/lib/systemd/system/promtail-digdag.service' do
+remote_file '/lib/systemd/system/vector-digdag.service' do
   owner 'root'
   group 'root'
   mode '644'
 end
 
 # Service setting:
-service 'promtail-digdag' do
+service 'vector-digdag' do
   action [ :enable, :restart ]
+end
+
+service 'rsyslog' do
+  action [ :nothing ]
 end

@@ -36,17 +36,15 @@ execute 'ufw reload-or-enable' do
   action :nothing
 end
 
-# Deploy the config file for `supervisor`:
-remote_file '/etc/supervisor/conf.d/digdag.conf' do
+# Deploy the config file for `systemd`:
+remote_file '/lib/systemd/system/digdag.service' do
   owner 'root'
   group 'root'
   mode '644'
-
-  notifies :restart, 'service[supervisor]'
 end
 
-service 'supervisor' do
-  action :nothing
+service 'digdag' do
+  action [ :enable, :restart ]
 end
 
 # Deploy /etc/hosts file:

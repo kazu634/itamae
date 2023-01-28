@@ -1,6 +1,6 @@
 # Install `Consul`:
 KEYSRV = "https://apt.releases.hashicorp.com/gpg"
-ID = "A3219F7B"
+ID = "AA16FCBCA621E701"
 
 execute "apt-key adv --keyserver #{KEYSRV} --recv-keys #{ID}" do
   not_if 'apt-key list | grep HashiCorp'

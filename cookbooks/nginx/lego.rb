@@ -78,18 +78,19 @@ directory "#{LEGO_STORAGE}" do
   mode '755'
 end
 
-encrypted_remote_file "#{LEGO_STORAGE}/lego_run.sh" do
-  owner 'root'
-  group 'root'
-  mode '500'
-  source   "files/#{LEGO_STORAGE}/lego_run.sh"
-  password ENV['ITAMAE_PASSWORD']
-end
+%w( kazu634 everun ).each do |domain|
+  encrypted_remote_file "#{LEGO_STORAGE}/#{domain}_run.sh" do
+    owner 'root'
+    group 'root'
+    mode '500'
+    source   "files/#{LEGO_STORAGE}/#{domain}_run.sh"
+    password ENV['ITAMAE_PASSWORD']
+  end
 
-execute "#{LEGO_STORAGE}/lego_run.sh" do
-  user 'root'
-  cwd LEGO_STORAGE
-  not_if "test -d #{LEGO_STORAGE}/.lego"
+  execute "#{LEGO_STORAGE}/#{domain}_run.sh" do
+    user 'root'
+    cwd LEGO_STORAGE
+  end
 end
 
 encrypted_remote_file '/etc/cron.d/lego' do

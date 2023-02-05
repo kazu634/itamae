@@ -34,6 +34,23 @@ remote_file '/etc/logrotate.d/snmp_exporter' do
   mode   '644'
 end
 
+# Deploy `vector` config for `snmp_exporter`:
+remote_file '/etc/vector/snmp_exporter.toml' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
+remote_file '/etc/systemd/system/vector-snmp_exporter.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
+service 'vector-snmp_exporter' do
+  action [:enable, :start]
+end
+
 # Deploy `consul` config:
 remote_file '/etc/consul.d/service-snmp_exporter.json' do
   owner  'consul'

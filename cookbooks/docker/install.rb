@@ -19,7 +19,7 @@ execute 'apt-get update' do
   not_if 'which docker'
 end
 
-%w(docker-ce docker-ce-cli containerd.io).each do |p|
+%w(docker-ce docker-ce-cli containerd.io docker-compose-plugin).each do |p|
   package p
 end
 

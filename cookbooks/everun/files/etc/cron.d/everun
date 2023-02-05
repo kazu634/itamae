@@ -1,0 +1,1 @@
+@reboot webadm cp -pr /home/webadm/works/everun/* /var/www/everun/

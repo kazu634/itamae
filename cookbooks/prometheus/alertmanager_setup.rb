@@ -20,7 +20,7 @@ encrypted_remote_file '/etc/prometheus.d/alertmanager.yml' do
 end
 
 # Deploy alert setting file:
-%w(node_exporter prometheus filestat).each do |conf|
+%w(node_exporter prometheus filestat services snmp).each do |conf|
   remote_file "/etc/prometheus.d/alerts/#{conf}.yml" do
     owner  'root'
     group  'root'

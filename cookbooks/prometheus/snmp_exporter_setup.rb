@@ -3,13 +3,15 @@ link '/etc/prometheus_exporters.d/snmp.yml' do
   to "#{node['snmp_exporter']['storage']}snmp.yml"
 end
 
-# Deploy `supervisord` config:
-remote_file '/etc/supervisor/conf.d/snmp_exporter.conf' do
+# Deploy `systemd` config:
+remote_file '/etc/systemd/system/snmp_exporter.service' do
   owner  'root'
   group  'root'
   mode   '644'
+end
 
-  notifies :restart, 'service[supervisor]'
+service 'snmp_exporter' do
+  action [:enable, :start]
 end
 
 # Deploy `consul` config:

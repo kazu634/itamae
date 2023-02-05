@@ -28,6 +28,13 @@ service 'rsyslog' do
   action :nothing
 end
 
+# Deploy `logrotate` config for `node_exporter`:
+remote_file '/etc/logrotate.d/node_exporter' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
 # Deploy `consul` config for `node_exporter`:
 remote_file '/etc/consul.d/service-node_exporter.json' do
   owner 'consul'

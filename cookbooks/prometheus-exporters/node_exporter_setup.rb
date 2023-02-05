@@ -1,10 +1,18 @@
 # Deploy the `supervisord` configuration:
-remote_file '/etc/supervisor/conf.d/node_exporter.conf' do
+remote_file '/etc/systemd/system/node_exporter.service' do
   owner 'root'
   group 'root'
   mode '644'
+end
 
-  notifies :restart, 'service[supervisor]'
+remote_file '/etc/default/node_exporter' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+service 'node_exporter' do
+  action [ :enable, :start]
 end
 
 # Deploy `consul` config for `node_exporter`:

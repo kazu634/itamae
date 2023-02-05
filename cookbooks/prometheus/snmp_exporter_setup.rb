@@ -14,6 +14,19 @@ service 'snmp_exporter' do
   action [:enable, :start]
 end
 
+# Deploy `rsyslog` config for `snmp_exporter`:
+remote_file '/etc/rsyslog.d/30-snmp_exporter.conf' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action :nothing
+end
+
 # Deploy `consul` config:
 remote_file '/etc/consul.d/service-snmp_exporter.json' do
   owner  'consul'

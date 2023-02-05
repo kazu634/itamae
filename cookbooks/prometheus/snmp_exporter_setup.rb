@@ -27,6 +27,13 @@ service 'rsyslog' do
   action :nothing
 end
 
+# Deploy `logrotate` config for `snmp_exporter`:
+remote_file '/etc/logrotate.d/snmp_exporter' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
 # Deploy `consul` config:
 remote_file '/etc/consul.d/service-snmp_exporter.json' do
   owner  'consul'

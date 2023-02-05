@@ -19,3 +19,11 @@ groups:
       summary: "node_exporter is not running: {{ $labels.instance }}."
       description: "node_exporter is not running: {{ $labels.instance }}."
 
+  - alert: vector-node_exporter
+    expr: node_systemd_unit_state{name="vector-node_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-node_exporter is not running: {{ $labels.instance }}."
+      description: "vector-node_exporter is not running: {{ $labels.instance }}."

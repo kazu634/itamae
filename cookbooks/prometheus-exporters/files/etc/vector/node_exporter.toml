@@ -1,0 +1,54 @@
+data_dir = "/var/lib/vector/"
+
+[sources.node_exporter]
+  type = "file"
+  include = [ "/var/log/node_exporter.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.node_exporter_transform]
+  type = "remap"
+  inputs = ["node_exporter"]
+  source = '''
+    . |= parse_syslog!(.message)
+
+    . |= parse_key_value!(.message)
+
+    del(.message)
+    del(.host)
+
+    .message = .msg
+    del(.msg)
+  '''
+
+[sinks.node_exporter_output]
+type = "file"
+inputs = [ "node_exporter_transform" ]
+compression = "none"
+path = "/tmp/node_exporter-%Y-%m-%d.log"
+
+  [sinks.node_exporter_output.encoding]
+  codec = "json"
+
+  [sinks.node_exporter_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.node_exporter_loki]
+type = "loki"
+inputs = [ "node_exporter_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.node_exporter_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  job = "node_exporter"
+  filename = "/var/log/node_exporter.log"
+
+  [sinks.node_exporter_loki.encoding]
+  codec = "json"
+
+  [sinks.node_exporter_loki.buffer]
+  max_size = 268435488
+  type = "disk"

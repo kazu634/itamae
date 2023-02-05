@@ -5,3 +5,6 @@ include_recipe './attributes.rb'
 include_recipe './install.rb'
 include_recipe './setup.rb'
 
+if node['vector']['isSyslog']
+  include_recipe './syslog_setup.rb'
+end

@@ -15,6 +15,19 @@ service 'node_exporter' do
   action [ :enable, :start]
 end
 
+# Deploy `rsyslog` config for `node_exporter`:
+remote_file '/etc/rsyslog.d/30-node_exporter.conf' do
+  owner 'root'
+  group 'root'
+  mode '644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action :nothing
+end
+
 # Deploy `consul` config for `node_exporter`:
 remote_file '/etc/consul.d/service-node_exporter.json' do
   owner 'consul'

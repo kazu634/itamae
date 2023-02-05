@@ -1,21 +1,13 @@
-global:
-  slack_api_url: 'https://hooks.slack.com/services/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'
-
-route:
-  receiver: 'test-route'
-  group_by: [alertname]
-  group_wait:      10s
-  group_interval:  1m
-  repeat_interval: 6h
-
-receivers:
-- name: 'test-route'
-  slack_configs:
-  - channel: '#ops'
-    title: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
-    text: "{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}"
-    send_resolved: true
-
-  webhook_configs:
-  - send_resolved: true
-    url: 'http://localhost:6725'
+md5:28ec9f4b96884f37cbd904fb91f5ee7d:salt:161-52-232-3-248-143-138-217:aes-256-cfb:Zl1SiauJIVlZ5Nl/QwFyZN4DzwSfaWC12a3AEioxgNPUdXHKPeRCb7u2o4Bw
+JrjA7SKRxeDjMBqYyQUnDG9AZ88l1xWkXMIm2cIjWdjj+5aRYpOls7QjCXfQ
+iN7d9tpw7tuqg3kMplKvEAHPGSDLK+1kBxCD37gYpQMa/VjL4Rnf9PD8Duae
+te52AbngvCRk7RfIIINIv6fiECYvC1dgnGs7lzwio4vC6ssO6O1uelt5IYvz
+1OQdywvSEYhh7KWSBRGwLhBAFmzDfdRcuJJD0qT6Sv0VkSKp4VP/MQsjuit6
+qESm5AAiiP9qyoRmWZgBuN3yyjAudmkNE6d+vJ3/5WXg0u8c54G+yQ0/eREe
+tKfIsn9hYna87GfM5Cwtwn5Iw1DYxWFTImsGV/aM3XsCLiA6Z9pMXdJR8YWY
+6pyODiTlpL8F/SRV6r+tABgJVq3Dc+C05xBoulYOx8LhHbBHo6oo9nupvHak
+YTe9RKctdZ8Qpf3QtsVQmBmOPhYMuBB9yMQ3EYZUErsm4aKcXpYOjjViO0uP
+DIY9CwmQbcPymFOS5nMUR85T6Qnuu0huGMVB0dIKh7vPECVIMd/0IxEkNacQ
+GaHbC9Cuav5vB0gyqTdg5xHWA89dC7jbz5anqPMBmpStPajGoGoH3vXmMrSf
+zylLMtkRb+EVXVSrdo9emjomJfzPxrmKk3hxfjnP4P/KxhIS8H/kjVEiDOpO
+IjO7

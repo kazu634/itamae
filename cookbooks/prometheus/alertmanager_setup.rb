@@ -8,10 +8,13 @@
 end
 
 # Deploy `alertmanager` file:
-remote_file '/etc/prometheus.d/alertmanager.yml' do
-  owner  'root'
-  group  'root'
-  mode   '644'
+encrypted_remote_file '/etc/prometheus.d/alertmanager.yml' do
+  owner 'root'
+  group 'root'
+  mode  '644'
+
+  source 'files/etc/prometheus.d/alertmanager.yml/'
+  password ENV['ITAMAE_PASSWORD']
 
   notifies :restart, 'service[supervisor]'
 end

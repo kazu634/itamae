@@ -61,6 +61,3 @@ service 'consul-template' do
   action :restart
 end
 
-service 'nginx' do
-  action :restart
-end

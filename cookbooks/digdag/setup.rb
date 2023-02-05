@@ -56,6 +56,14 @@ remote_file '/etc/rsyslog.d/30-digdag.conf' do
   notifies :restart, 'service[rsyslog]', :immediately
 end
 
+# Deploy `logrotate` config for `digdag`:
+remote_file '/etc/logrotate.d/digdag' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+
 # Deploy the config file for `vector`:
 remote_file '/etc/vector/digdag.toml' do
   owner 'root'

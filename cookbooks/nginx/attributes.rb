@@ -4,7 +4,7 @@
 node.reverse_merge!({
   'nginx' => {
     'version' => '1.23.2',
-    'skip_lego' => 'false',
-    'skip_webadm' => 'false'
+    'skip_lego' => 'true',
+    'skip_webadm' => 'true'
   }
 })

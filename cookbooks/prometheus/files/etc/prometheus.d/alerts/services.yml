@@ -10,3 +10,12 @@ groups:
       summary: "Digdag is not running: {{ $labels.instance }}."
       description: "Digdag is not running: {{ $labels.instance }}."
 
+  - alert: go-mmproxy
+    expr: node_systemd_unit_state{name="go-mmproxy:w.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "Digdag is not running: {{ $labels.instance }}."
+      description: "Digdag is not running: {{ $labels.instance }}."
+

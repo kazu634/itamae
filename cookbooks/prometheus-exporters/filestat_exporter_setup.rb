@@ -31,6 +31,13 @@ service 'rsyslog' do
   action :nothing
 end
 
+# Deploy `logrotate` config:
+remote_file '/etc/logrotate.d/filestat_exporter' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
 # Deploy `consul` config for `filestat_exporter`:
 remote_file '/etc/consul.d/service-filestat_exporter.json' do
   owner 'consul'

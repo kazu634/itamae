@@ -45,3 +45,21 @@ groups:
     annotations:
       summary: "vector-snmp_exporter is not running: {{ $labels.instance }}."
       description: "vector-snmp_exporter is not running: {{ $labels.instance }}."
+
+  - alert: filestat_exporter
+    expr: node_systemd_unit_state{name="filestat_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "filestat_exporter is not running: {{ $labels.instance }}."
+      description: "filestat_exporter is not running: {{ $labels.instance }}."
+
+  - alert: vector-filestat_exporter
+    expr: node_systemd_unit_state{name="vector-filestat_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-filestat_exporter is not running: {{ $labels.instance }}."
+      description: "vector-filestat_exporter is not running: {{ $labels.instance }}."

@@ -38,6 +38,25 @@ remote_file '/etc/logrotate.d/filestat_exporter' do
   mode '644'
 end
 
+# Deploy `vector` config:
+remote_file '/etc/vector/filestat_exporter.toml' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-filestat_exporter]'
+end
+
+remote_file '/etc/systemd/system/vector-filestat_exporter.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
+service 'vector-filestat_exporter' do
+  action [:enable, :start]
+end
+
 # Deploy `consul` config for `filestat_exporter`:
 remote_file '/etc/consul.d/service-filestat_exporter.json' do
   owner 'consul'

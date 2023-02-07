@@ -18,7 +18,7 @@ service 'filestat_exporter' do
   action [:enable, :start]
 end
 
-# Deploy `consul` config for `node_exporter`:
+# Deploy `consul` config for `filestat_exporter`:
 remote_file '/etc/consul.d/service-filestat_exporter.json' do
   owner 'consul'
   group 'consul'

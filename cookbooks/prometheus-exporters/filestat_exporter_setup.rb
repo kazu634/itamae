@@ -7,13 +7,15 @@ remote_file '/etc/prometheus_exporters.d/filestat.yml' do
   notifies :restart, 'service[supervisor]'
 end
 
-# Deploy the `supervisord` configuration:
-remote_file '/etc/supervisor/conf.d/filestat_exporter.conf' do
+# Deploy the `systemd` configuration:
+remote_file '/etc/systemd/system/filestat_exporter.service' do
   owner 'root'
   group 'root'
   mode '644'
+end
 
-  notifies :restart, 'service[supervisor]'
+service 'filestat_exporter' do
+  action [:enable, :start]
 end
 
 # Deploy `consul` config for `node_exporter`:

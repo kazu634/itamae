@@ -63,3 +63,12 @@ groups:
     annotations:
       summary: "vector-filestat_exporter is not running: {{ $labels.instance }}."
       description: "vector-filestat_exporter is not running: {{ $labels.instance }}."
+
+  - alert: exporter_proxy
+    expr: node_systemd_unit_state{name="exporter_proxy.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "exporter_proxy is not running: {{ $labels.instance }}."
+      description: "exporter_proxy is not running: {{ $labels.instance }}."

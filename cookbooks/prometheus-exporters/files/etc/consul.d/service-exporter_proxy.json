@@ -1,0 +1,14 @@
+{
+  "service": {
+    "name": "exporter_proxy",
+    "port": 60000,
+    "check":{
+      "http": "http://localhost:60000/",
+      "tls_skip_verify": false,
+      "interval": "60s",
+      "timeout": "1s",
+      "status": "passing",
+      "success_before_passing": 3
+    }
+  }
+}

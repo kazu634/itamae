@@ -39,6 +39,19 @@ service 'exporter_proxy' do
   action [:enable, :start]
 end
 
+remote_file '/etc/consul.d/service-exporter_proxy.json' do
+  user 'root'
+  group 'root'
+
+  mode '644'
+
+  notifies :restart, 'service[consul]'
+end
+
+service 'consul' do
+  action :nothing
+end
+
 # Firewall settings here:
 %w( 60000/tcp ).each do |p|
   execute "ufw allow #{p}" do

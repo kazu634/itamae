@@ -28,17 +28,15 @@ remote_file "#{CONFDIR}#{CONF}" do
   mode '644'
 end
 
-remote_file '/etc/supervisor/conf.d/exporter_proxy.conf' do
+remote_file '/etc/systemd/system/exporter_proxy.service' do
   user 'root'
   group 'root'
 
   mode '644'
-
-  notifies :restart, 'service[supervisor]'
 end
 
-service 'supervisor' do
-  action :nothing
+service 'exporter_proxy' do
+  action [:enable, :start]
 end
 
 # Firewall settings here:

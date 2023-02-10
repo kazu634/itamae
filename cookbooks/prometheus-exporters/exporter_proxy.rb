@@ -1,4 +1,4 @@
-URL = 'https://github.com/rrreeeyyy/exporter_proxy/releases/download/v0.1.0/exporter_proxy_linux_amd64'
+URL = 'https://github.com/rrreeeyyy/exporter_proxy/releases/download/v0.4.1/exporter_proxy_linux_amd64'
 BIN = '/usr/local/bin/exporter_proxy'
 CONFDIR = '/etc/prometheus_exporters.d/exporter_proxy/'
 CONF = 'config.yml'

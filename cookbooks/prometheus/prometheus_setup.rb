@@ -8,7 +8,7 @@ end
 %w(/etc/prometheus.d).each do |d|
   directory d do
     owner  'prometheus'
-    group  'promtheus'
+    group  'prometheus'
     mode   '0755'
   end
 end
@@ -20,13 +20,15 @@ remote_file '/etc/prometheus.d/prometheus.yml' do
   mode   '644'
 end
 
-# Deploy `supervisor` configuration for `prometheus`:
-remote_file '/etc/supervisor/conf.d/prometheus.conf' do
-  owner  'prometheus'
-  group  'prometheus'
+# Deploy `systemd` configuration for `prometheus`:
+remote_file '/etc/systemd/system/prometheus.service' do
+  owner  'root'
+  group  'root'
   mode   '644'
+end
 
-  notifies :restart, 'service[supervisor]'
+service 'prometheus' do
+  action [:enable, :start]
 end
 
 # Depoy `consul` service configuration for `prometheus`:

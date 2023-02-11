@@ -31,6 +31,19 @@ service 'prometheus' do
   action [:enable, :start]
 end
 
+# Depoy `rsyslog` configuration for `prometheus`:
+remote_file '/etc/rsyslog.d/30-prometheus.conf' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action :nothing
+end
+
 # Depoy `consul` service configuration for `prometheus`:
 remote_file '/etc/consul.d/service-prometheus.json' do
   owner  'consul'

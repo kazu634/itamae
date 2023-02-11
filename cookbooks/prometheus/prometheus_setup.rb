@@ -1,23 +1,29 @@
+# Create User and group:
+user 'prometheus' do
+  system_user true
+  shell '/sbin/nologin'
+end
+
 # Create `/etc/prometheus.d/`:
 %w(/etc/prometheus.d).each do |d|
   directory d do
-    owner  'root'
-    group  'root'
+    owner  'prometheus'
+    group  'promtheus'
     mode   '0755'
   end
 end
 
 # Deploy `prometheus` files:
 remote_file '/etc/prometheus.d/prometheus.yml' do
-  owner  'root'
-  group  'root'
+  owner  'prometheus'
+  group  'prometheus'
   mode   '644'
 end
 
 # Deploy `supervisor` configuration for `prometheus`:
 remote_file '/etc/supervisor/conf.d/prometheus.conf' do
-  owner  'root'
-  group  'root'
+  owner  'prometheus'
+  group  'prometheus'
   mode   '644'
 
   notifies :restart, 'service[supervisor]'

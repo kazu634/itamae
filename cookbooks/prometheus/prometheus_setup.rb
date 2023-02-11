@@ -44,6 +44,13 @@ service 'rsyslog' do
   action :nothing
 end
 
+# Depoy `logrotate` configuration for `prometheus`:
+remote_file '/etc/logrotate.d/prometheus' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
 # Depoy `consul` service configuration for `prometheus`:
 remote_file '/etc/consul.d/service-prometheus.json' do
   owner  'consul'

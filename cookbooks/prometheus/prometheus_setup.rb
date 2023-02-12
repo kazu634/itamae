@@ -51,6 +51,13 @@ remote_file '/etc/logrotate.d/prometheus' do
   mode   '644'
 end
 
+# Depoy `vector` configuration for `prometheus`:
+remote_file '/etc/vector/prometheus.toml' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
 # Depoy `consul` service configuration for `prometheus`:
 remote_file '/etc/consul.d/service-prometheus.json' do
   owner  'consul'

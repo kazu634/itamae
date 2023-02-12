@@ -58,6 +58,16 @@ remote_file '/etc/vector/prometheus.toml' do
   mode   '644'
 end
 
+remote_file '/etc/systemd/system/vector-prometheus.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
+service 'vector-prometheus' do
+  action [:enable, :start]
+end
+
 # Depoy `consul` service configuration for `prometheus`:
 remote_file '/etc/consul.d/service-prometheus.json' do
   owner  'consul'

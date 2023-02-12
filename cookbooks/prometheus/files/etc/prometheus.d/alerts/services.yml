@@ -72,3 +72,21 @@ groups:
     annotations:
       summary: "exporter_proxy is not running: {{ $labels.instance }}."
       description: "exporter_proxy is not running: {{ $labels.instance }}."
+
+  - alert: prometheus
+    expr: node_systemd_unit_state{name="prometheus.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "prometheus is not running: {{ $labels.instance }}."
+      description: "prometheus is not running: {{ $labels.instance }}."
+
+  - alert: vector-prometheus
+    expr: node_systemd_unit_state{name="vector-prometheus.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-prometheus is not running: {{ $labels.instance }}."
+      description: "vector-prometheus is not running: {{ $labels.instance }}."

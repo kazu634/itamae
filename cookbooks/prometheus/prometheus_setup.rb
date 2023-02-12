@@ -5,11 +5,11 @@ user 'prometheus' do
 end
 
 # Create `/etc/prometheus.d/`:
-%w(/etc/prometheus.d).each do |d|
+%w( /etc/prometheus.d /var/opt/prometheus ).each do |d|
   directory d do
     owner  'prometheus'
     group  'prometheus'
-    mode   '0755'
+    mode   '0744'
   end
 end
 

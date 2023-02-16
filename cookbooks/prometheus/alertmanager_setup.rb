@@ -70,6 +70,14 @@ remote_file '/etc/vector/alertmanager.toml' do
   notifies :restart, 'service[vector-alertmanager]'
 end
 
+remote_file '/etc/systemd/system/vector-alertmanager.service' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[vector-alertmanager]'
+end
+
 service 'vector-alertmanager' do
   action [:enable, :start]
 end

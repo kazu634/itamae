@@ -30,18 +30,15 @@ end
   end
 end
 
-# Deploy `supervisord` config:
-remote_file '/etc/supervisor/conf.d/alertmanager.conf' do
+# Deploy `systemd` config for `alertmanager`:
+remote_file '/etc/systemd/system/alertmanager.service' do
   owner  'root'
   group  'root'
   mode   '644'
-
-  notifies :restart, 'service[supervisor]'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
-  action :nothing
+service 'alertmanager' do
+  action [:enable, :start]
 end
 
 # Firewall settings here:

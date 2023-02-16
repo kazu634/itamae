@@ -41,6 +41,19 @@ service 'alertmanager' do
   action [:enable, :start]
 end
 
+# Deploy `rsyslog` config for `alertmanager`:
+remote_file '/etc/rsyslog.d/30-alertmanager.conf' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action :nothing
+end
+
 # Firewall settings here:
 %w( 9093/tcp ).each do |p|
   execute "ufw allow #{p}" do

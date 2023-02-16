@@ -54,6 +54,13 @@ service 'rsyslog' do
   action :nothing
 end
 
+# Deploy `logroted` config for `alertmanager`:
+remote_file '/etc/logrotate.d/alertmanager' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
 # Firewall settings here:
 %w( 9093/tcp ).each do |p|
   execute "ufw allow #{p}" do

@@ -61,6 +61,19 @@ remote_file '/etc/logrotate.d/alertmanager' do
   mode   '644'
 end
 
+# Deploy `vector` config for `alertmanager`:
+remote_file '/etc/vector/alertmanager.toml' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[vector-alertmanager]'
+end
+
+service 'vector-alertmanager' do
+  action [:enable, :start]
+end
+
 # Firewall settings here:
 %w( 9093/tcp ).each do |p|
   execute "ufw allow #{p}" do

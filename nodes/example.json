@@ -1,5 +1,11 @@
 {
   "recipes": [
-    "./roles/base.rb"
-  ]
+    "./roles/base.rb",
+    "./cookbooks/nginx/default.rb"
+  ],
+  "nginx": {
+    "skip_lego": false,
+    "skip_webadm": false
+  },
+  "is_ec2": true
 }

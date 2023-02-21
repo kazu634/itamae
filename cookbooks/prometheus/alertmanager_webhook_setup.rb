@@ -23,3 +23,10 @@ end
 service 'rsyslog' do
   action :nothing
 end
+
+# Deploy `logrotate` config for `Alert Manager Webhook Logger`:
+remote_file '/etc/logrotate.d/webhook' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end

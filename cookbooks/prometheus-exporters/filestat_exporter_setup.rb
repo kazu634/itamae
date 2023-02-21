@@ -1,10 +1,8 @@
-# Deploy the `supervisord` configuration:
+# Deploy the configuration:
 remote_file '/etc/prometheus_exporters.d/filestat.yml' do
   owner 'root'
   group 'root'
   mode '644'
-
-  notifies :restart, 'service[supervisor]'
 end
 
 # Deploy the `systemd` configuration:

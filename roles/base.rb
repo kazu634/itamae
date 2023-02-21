@@ -1,6 +1,5 @@
 include_recipe '../cookbooks/base/default.rb'
 include_recipe '../cookbooks/kazu634/default.rb'
-include_recipe '../cookbooks/supervisor/default.rb'
 include_recipe '../cookbooks/vault/default.rb'
 include_recipe '../cookbooks/consul-template/default.rb'
 include_recipe '../cookbooks/consul/default.rb'

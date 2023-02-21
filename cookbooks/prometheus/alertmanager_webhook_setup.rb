@@ -1,14 +1,13 @@
-# Deploy `supervisor` config for `Alert Manager Webhook Logger`
-remote_file '/etc/supervisor/conf.d/alertmanager_webhook_logger.conf' do
+# Deploy `systemd` config for `Alert Manager Webhook Logger`
+remote_file '/etc/systemd/system.d/webhook.conf' do
   owner  'root'
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[webhook]'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
-  action :nothing
+service 'webhook' do
+  action [:enable, :start]
 end
 

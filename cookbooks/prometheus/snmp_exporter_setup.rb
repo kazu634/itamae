@@ -64,26 +64,3 @@ end
 service 'consul' do
   action :nothing
 end
-
-# Deploy /etc/hosts file:
-template '/etc/promtail/snmp_exporter.yaml' do
-  owner 'root'
-  group 'root'
-  mode '644'
-
-  variables(HOSTNAME: node[:hostname], LOKIENDPOINT: node['promtail']['lokiendpoint'])
-
-  notifies :restart, 'service[promtail-snmp_exporter]'
-end
-
-# Deploy the `systemd` configuration:
-remote_file '/lib/systemd/system/promtail-snmp_exporter.service' do
-  owner 'root'
-  group 'root'
-  mode '644'
-end
-
-# Service setting:
-service 'promtail-snmp_exporter' do
-  action [ :enable, :restart ]
-end

@@ -1,5 +1,5 @@
 # Deploy `systemd` config for `Alert Manager Webhook Logger`
-remote_file '/etc/systemd/system.d/webhook.conf' do
+remote_file '/etc/systemd/system/webhook.service' do
   owner  'root'
   group  'root'
   mode   '644'

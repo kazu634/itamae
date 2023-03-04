@@ -49,6 +49,26 @@ service 'vector-auth' do
   action [:enable, :start]
 end
 
+# Deploy config for mointoring `/var/log/consul/consul-*.log`:
+remote_file '/etc/vector/consul.toml' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-consul]'
+end
+
+remote_file '/etc/systemd/system/vector-consul.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-consul]'
+end
+
+service 'vector-consul' do
+  action [:enable, :start]
+end
 
 # Stop vector default service:
 service 'vector' do

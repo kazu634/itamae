@@ -1,0 +1,62 @@
+data_dir = "/var/lib/vector/"
+
+[sources.consul]
+  type = "file"
+  include = [ "/var/log/consul/consul-*.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.consul_transform]
+  type = "remap"
+  inputs = ["consul"]
+  source = '''
+    dt, err = parse_regex(.message, r'^(?P<dt>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}\+\d{4}) ')
+    . = merge(., dt)
+
+    .timestamp = .dt
+    del(.dt)
+
+    .message = replace!(.message, r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}\+\d{4} ', "")
+
+    .hostname = .host
+    del(.host)
+
+    lv, err = parse_regex(.message, r'\[(?P<level>[^\]]+)\]')
+    . = merge(., lv)
+
+    .message = replace(.message, r'\[(?P<level>[^\]]+)\] ', "")
+
+    .level = downcase!(.level)
+  '''
+
+[sinks.consul_output]
+type = "file"
+inputs = [ "consul_transform" ]
+compression = "none"
+path = "/tmp/consul-%Y-%m-%d.log"
+
+  [sinks.consul_output.encoding]
+  codec = "json"
+
+  [sinks.consul_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.consul_loki]
+type = "loki"
+inputs = [ "consul_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.consul_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  job = "consul"
+  filename = "{{ file }}"
+
+  [sinks.consul_loki.encoding]
+  codec = "json"
+
+  [sinks.consul_loki.buffer]
+  max_size = 268435488
+  type = "disk"

@@ -1,0 +1,62 @@
+data_dir = "/var/lib/vector/"
+
+[sources.journald]
+  type = "journald"
+  exclude_units = [
+      "prometheus",
+      "consul",
+      "cron",
+      "snmp_exporter",
+  ]
+
+  [sources.journald.exclude_matches]
+  "SYSLOG_IDENTIFIER" = [ "kernel", "vector", "sudo", "vault" ]
+
+[transforms.journald_transform]
+  type = "remap"
+  inputs = ["journald"]
+  source = '''
+    .hostname = .host
+    del(.host)
+
+    .SYSLOG_FACILITY = to_int!(.SYSLOG_FACILITY)
+    .SYSLOG_FACILITY = to_syslog_facility!(.SYSLOG_FACILITY)
+
+    .PRIORITY = to_int!(.PRIORITY)
+    .PRIORITY = to_syslog_level!(.PRIORITY)
+
+    .SYSLOG_IDENTIFIER = downcase!(.SYSLOG_IDENTIFIER)
+
+    .job = replace!(._SYSTEMD_UNIT, r'(\.service|\.scope)', "")
+  '''
+
+[sinks.journald_output]
+type = "file"
+inputs = [ "journald_transform" ]
+compression = "none"
+path = "/tmp/journald-%Y-%m-%d.log"
+
+  [sinks.journald_output.encoding]
+  codec = "json"
+
+  [sinks.journald_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.journald_loki]
+type = "loki"
+inputs = [ "journald_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.journald_loki.labels]
+  level = "{{ PRIORITY }}"
+  hostname = "{{ hostname }}"
+  job = "{{ job }}"
+
+  [sinks.journald_loki.encoding]
+  codec = "json"
+
+  [sinks.journald_loki.buffer]
+  max_size = 268435488
+  type = "disk"

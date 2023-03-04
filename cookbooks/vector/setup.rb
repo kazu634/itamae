@@ -70,6 +70,27 @@ service 'vector-consul' do
   action [:enable, :start]
 end
 
+# Deploy config for mointoring `journald`:
+remote_file '/etc/vector/journald.toml' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-journald]'
+end
+
+remote_file '/etc/systemd/system/vector-journald.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-journald]'
+end
+
+service 'vector-journald' do
+  action [:enable, :start]
+end
+
 # Stop vector default service:
 service 'vector' do
   action :disable

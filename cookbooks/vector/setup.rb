@@ -91,6 +91,27 @@ service 'vector-journald' do
   action [:enable, :start]
 end
 
+# Deploy config for mointoring `/var/log/unattended-upgrades/unattended-upgrades-dpkg.log`:
+remote_file '/etc/vector/unattended-upgrade.toml' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-unattended-upgrade]'
+end
+
+remote_file '/etc/systemd/system/vector-unattended-upgrade.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[vector-unattended-upgrade]'
+end
+
+service 'vector-unattended-upgrade' do
+  action [:enable, :start]
+end
+
 # Stop vector default service:
 service 'vector' do
   action :disable

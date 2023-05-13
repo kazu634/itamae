@@ -90,3 +90,12 @@ groups:
     annotations:
       summary: "vector-prometheus is not running: {{ $labels.instance }}."
       description: "vector-prometheus is not running: {{ $labels.instance }}."
+
+  - alert: vault
+    expr: node_systemd_unit_state{name="vault.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vault is not running: {{ $labels.instance }}."
+      description: "vault is not running: {{ $labels.instance }}."

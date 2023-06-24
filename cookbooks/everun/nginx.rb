@@ -24,7 +24,7 @@ execute 'mount -a' do
   action :nothing
 end
 
-remote_file '/etc/cron.d/everun' do
+remote_file '/etc/cron.d/everun-blog' do
   owner 'root'
   group 'root'
   mode '644'

@@ -1,0 +1,56 @@
+data_dir = "/var/lib/vector/"
+
+[sources.nginx-error]
+  type = "file"
+  include = [ "/var/log/nginx/*error.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.nginx-error_transform]
+  type = "remap"
+  inputs = ["nginx-error"]
+  source = '''
+    .hostname = .host
+    del(.host)
+
+    el, err = parse_regex(.message, r'^(?P<timestamp>[^ ]+ [^ ]+) (?P<level>[^ ]+) (?P<message>.*)$')
+    . = merge(., el)
+
+    tmp, err = replace(.level, "[", "")
+    .level = replace(tmp, "]", "")
+
+    .timestamp = parse_timestamp!(.timestamp, "%Y/%m/%d %T")
+  '''
+
+[sinks.nginx-error_output]
+type = "file"
+inputs = [ "nginx-error_transform" ]
+compression = "none"
+path = "/tmp/nginx-error-%Y-%m-%d.log"
+
+  [sinks.nginx-error_output.encoding]
+  codec = "json"
+
+  [sinks.nginx-error_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.nginx-error_loki]
+type = "loki"
+inputs = [ "nginx-error_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.nginx-error_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  vhost = "{{ vhost }}"
+  job = "nginx"
+
+  [sinks.nginx-error_loki.encoding]
+  codec = "json"
+
+  [sinks.nginx-error_loki.buffer]
+  max_size = 268435488
+  type = "disk"
+

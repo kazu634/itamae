@@ -23,6 +23,6 @@ node.reverse_merge!({
     'ipaddr' => ipaddr,
     'dns' => dns,
     'encrypt' => 's2T3XUTb9MjHYOw8I820O5YkN2G6eJrjLjJRTnEAKoM=',
-    'token' => 'acb7096c-dcda-775a-b52c-b47c96b38d0e'
+    'token' => '63de6edb-0cb0-de95-d5f1-7facf616c26d'
   }
 })

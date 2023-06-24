@@ -91,14 +91,14 @@ end
     user 'root'
     cwd LEGO_STORAGE
   end
-end
 
-encrypted_remote_file '/etc/cron.d/lego' do
-  owner 'root'
-  group 'root'
-  mode '644'
-  source   'files/etc/cron.d/lego'
-  password ENV['ITAMAE_PASSWORD']
+  encrypted_remote_file "/etc/cron.d/#{domain}" do
+    owner 'root'
+    group 'root'
+    mode '644'
+    source   "files/etc/cron.d/#{domain}"
+    password ENV['ITAMAE_PASSWORD']
+  end
 end
 
 remote_file "/etc/lego/dhparams_4096.pem" do

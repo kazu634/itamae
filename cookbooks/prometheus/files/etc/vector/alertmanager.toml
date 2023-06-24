@@ -1,0 +1,63 @@
+data_dir = "/var/lib/vector/"
+
+[sources.alertmanager]
+  type = "file"
+  include = [ "/var/log/alertmanager.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.alertmanager_transform]
+  type = "remap"
+  inputs = ["alertmanager"]
+  source = '''
+    . |= parse_syslog!(.message)
+    del(.host)
+
+    errmsg = parse_regex(.message, r'err=(?P<err>.+)$') ?? {}
+    . = merge(., errmsg)
+    .message = replace(.message, r'err=.+$', "")
+
+    . |= parse_logfmt!(.message)
+    del(.message)
+
+    .message = .msg
+    del(.msg)
+
+    minutes = parse_json(.minutes, ) ?? {}
+    . = merge!(., minutes)
+
+    .timestamp = .ts
+    del(.ts)
+  '''
+
+[sinks.alertmanager_output]
+type = "file"
+inputs = [ "alertmanager_transform" ]
+compression = "none"
+path = "/tmp/alertmanager-%Y-%m-%d.log"
+
+  [sinks.alertmanager_output.encoding]
+  codec = "json"
+
+  [sinks.alertmanager_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.alertmanager_loki]
+type = "loki"
+inputs = [ "alertmanager_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.alertmanager_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  job = "alertmanager"
+  filename = "/var/log/alertmanager.log"
+
+  [sinks.alertmanager_loki.encoding]
+  codec = "json"
+
+  [sinks.alertmanager_loki.buffer]
+  max_size = 268435488
+  type = "disk"

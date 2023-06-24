@@ -1,0 +1,61 @@
+data_dir = "/var/lib/vector/"
+
+[sources.prometheus]
+  type = "file"
+  include = [ "/var/log/prometheus.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.prometheus_transform]
+  type = "remap"
+  inputs = ["prometheus"]
+  source = '''
+    . |= parse_syslog!(.message)
+    del(.host)
+
+    errmsg = parse_regex(.message, r'err=(?P<err>.+)$') ?? {}
+    . = merge(., errmsg)
+    .message = replace(.message, r'err=.+$', "")
+
+    . |= parse_logfmt!(.message)
+    del(.message)
+
+    .message = .msg
+    del(.msg)
+
+    .timestamp = .ts
+    del(.ts)
+  '''
+
+[sinks.prometheus_output]
+type = "file"
+inputs = [ "prometheus_transform" ]
+compression = "none"
+path = "/tmp/prometheus-%Y-%m-%d.log"
+
+  [sinks.prometheus_output.encoding]
+  codec = "json"
+
+  [sinks.prometheus_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.prometheus_loki]
+type = "loki"
+inputs = [ "prometheus_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.prometheus_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  job = "prometheus"
+  filename = "/var/log/prometheus.log"
+
+  [sinks.prometheus_loki.encoding]
+  codec = "json"
+
+  [sinks.prometheus_loki.buffer]
+  max_size = 268435488
+  type = "disk"
+

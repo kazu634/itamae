@@ -1,0 +1,15 @@
+[Unit]
+Description=digdag
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/digdag
+Restart=on-failure
+ExecStart=/etc/digdag/digdag.sh
+KillSignal=process
+
+[Install]
+WantedBy=multi-user.target
+

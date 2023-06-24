@@ -7,7 +7,27 @@ package 'dnsmasq'
 end
 
 case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
-when "20.04", "22.04"
+when "22.04"
+  template '/etc/systemd/resolved.conf' do
+    owner 'root'
+    group 'root'
+    mode '644'
+
+    source 'templates/etc/systemd/resolved.conf.2204.erb'
+    variables(dns: node['consul']['dns'])
+
+    notifies :restart, 'service[systemd-resolved]', :immediately
+  end
+
+  remote_file '/etc/dnsmasq.conf' do
+    owner 'root'
+    group 'root'
+    mode '644'
+
+    notifies :restart, 'service[dnsmasq]', :immediately
+  end
+
+when "20.04"
   template '/etc/systemd/resolved.conf' do
     owner 'root'
     group 'root'

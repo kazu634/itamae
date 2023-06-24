@@ -1,10 +1,55 @@
-# Deploy the `supervisord` configuration:
-remote_file '/etc/supervisor/conf.d/node_exporter.conf' do
+# Deploy the `systemd` configuration:
+remote_file '/etc/systemd/system/node_exporter.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+remote_file '/etc/default/node_exporter' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+service 'node_exporter' do
+  action [ :enable, :start]
+end
+
+# Deploy `rsyslog` config for `node_exporter`:
+remote_file '/etc/rsyslog.d/30-node_exporter.conf' do
   owner 'root'
   group 'root'
   mode '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action :nothing
+end
+
+# Deploy `logrotate` config for `node_exporter`:
+remote_file '/etc/logrotate.d/node_exporter' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
+# Deploy the `systemd` config for `vector`:
+remote_file '/etc/vector/node_exporter.toml' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+remote_file '/etc/systemd/system/vector-node_exporter.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+service 'vector-node_exporter' do
+  action [ :enable, :start]
 end
 
 # Deploy `consul` config for `node_exporter`:

@@ -36,38 +36,53 @@ execute 'ufw reload-or-enable' do
   action :nothing
 end
 
-# Deploy the config file for `supervisor`:
-remote_file '/etc/supervisor/conf.d/digdag.conf' do
+# Deploy the config file for `systemd`:
+remote_file '/lib/systemd/system/digdag.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+service 'digdag' do
+  action [ :enable, :restart ]
+end
+
+# Deploy `rsyslog` config file for `digdag`:
+remote_file '/etc/rsyslog.d/30-digdag.conf' do
   owner 'root'
   group 'root'
   mode '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[rsyslog]', :immediately
 end
 
-service 'supervisor' do
-  action :nothing
-end
-
-# Deploy /etc/hosts file:
-HOSTNAME = run_command('uname -n').stdout.chomp
-
-template '/etc/promtail/digdag.yaml' do
+# Deploy `logrotate` config for `digdag`:
+remote_file '/etc/logrotate.d/digdag' do
   owner 'root'
-    group 'root'
-      mode '644'
+  group 'root'
+  mode '644'
+end
 
-  variables(HOSTNAME: HOSTNAME, LOKIENDPOINT: node['promtail']['lokiendpoint'])
-  end
+
+# Deploy the config file for `vector`:
+remote_file '/etc/vector/digdag.toml' do
+  owner 'root'
+  group 'root'
+  mode  '644'
+end
 
 # Deploy the `systemd` configuration:
-remote_file '/lib/systemd/system/promtail-digdag.service' do
+remote_file '/lib/systemd/system/vector-digdag.service' do
   owner 'root'
   group 'root'
   mode '644'
 end
 
 # Service setting:
-service 'promtail-digdag' do
+service 'vector-digdag' do
   action [ :enable, :restart ]
+end
+
+service 'rsyslog' do
+  action [ :nothing ]
 end

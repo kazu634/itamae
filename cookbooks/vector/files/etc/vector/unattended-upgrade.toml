@@ -1,0 +1,50 @@
+data_dir = "/var/lib/vector/"
+
+[sources.unattended-upgrade]
+  type = "file"
+  include = [ "/var/log/unattended-upgrades/unattended-upgrades.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.unattended-upgrade_transform]
+  type = "remap"
+  inputs = ["unattended-upgrade"]
+  source = '''
+    parse = parse_regex(.message, r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}), \d{3} (?P<level>[^ ]+) (?P<message>.+)$') ?? {}
+    . = merge(., parse)
+
+    .hostname = .host
+    del(.host)
+  '''
+
+[sinks.unattended-upgrade_output]
+type = "file"
+inputs = [ "unattended-upgrade_transform" ]
+compression = "none"
+path = "/tmp/unattended-upgrade-%Y-%m-%d.log"
+
+  [sinks.unattended-upgrade_output.encoding]
+  codec = "json"
+
+  [sinks.unattended-upgrade_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.unattended-upgrade_loki]
+type = "loki"
+inputs = [ "unattended-upgrade_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.unattended-upgrade_loki.labels]
+  level = "notice"
+  hostname = "{{ hostname }}"
+  job = "unattended-upgrade"
+  filename = "{{ file }}"
+
+  [sinks.unattended-upgrade_loki.encoding]
+  codec = "json"
+
+  [sinks.unattended-upgrade_loki.buffer]
+  max_size = 268435488
+  type = "disk"

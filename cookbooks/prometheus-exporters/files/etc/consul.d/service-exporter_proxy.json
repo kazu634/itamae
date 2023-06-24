@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "exporter-proxy",
+    "port": 60000,
+    "check":{
+      "tcp": "localhost:60000",
+      "interval": "60s",
+      "timeout": "1s",
+      "status": "passing",
+      "success_before_passing": 3
+    }
+  }
+}

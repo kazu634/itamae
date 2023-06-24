@@ -1,14 +1,32 @@
-# Deploy `supervisor` config for `Alert Manager Webhook Logger`
-remote_file '/etc/supervisor/conf.d/alertmanager_webhook_logger.conf' do
+# Deploy `systemd` config for `Alert Manager Webhook Logger`
+remote_file '/etc/systemd/system/webhook.service' do
   owner  'root'
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[webhook]'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
+service 'webhook' do
+  action [:enable, :start]
+end
+
+# Deploy `rsyslog` config for `Alert Manager Webhook Logger`:
+remote_file '/etc/rsyslog.d/30-webhook.conf' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
   action :nothing
 end
 
+# Deploy `logrotate` config for `Alert Manager Webhook Logger`:
+remote_file '/etc/logrotate.d/webhook' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end

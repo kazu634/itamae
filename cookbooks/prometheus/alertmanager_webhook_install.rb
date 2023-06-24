@@ -12,7 +12,7 @@ begin
   Timeout.timeout(3) do
     response = Net::HTTP.get_response(uri)
 
-    tag = $1 if response.body =~ %r{tag\/(\d+\.\d+)}
+    tag = $1 if response['location'] =~ %r{tag\/(\d+\.\d+)}
 
     alertmanager_webhook_bin = "#{node['alertmanager_webhook']['prefix']}#{tag}#{node['alertmanager_webhook']['postfix']}"
 

@@ -1,0 +1,65 @@
+data_dir = "/var/lib/vector/"
+
+[sources.nginx]
+  type = "file"
+  include = [ "/var/log/nginx/*access.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.nginx_transform]
+  type = "remap"
+  inputs = ["nginx"]
+  source = '''
+    .hostname = .host
+
+    l = parse_json!(.message)
+    . = merge!(., l)
+
+    del(.message)
+    del(.host)
+
+    .status = string!(.status)
+    if match(.status, r'^[23]') {
+      .level = "info"
+    } else if match(.status, r'^[4]') {
+      .level = "warn"
+    } else {
+      .level = "error"
+    }
+
+    .timestamp = parse_timestamp!(.time, format: "%d/%b/%Y:%T %z")
+    del(.time)
+  '''
+
+[sinks.nginx_output]
+type = "file"
+inputs = [ "nginx_transform" ]
+compression = "none"
+path = "/tmp/nginx-access-%Y-%m-%d.log"
+
+  [sinks.nginx_output.encoding]
+  codec = "json"
+
+  [sinks.nginx_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.nginx_loki]
+type = "loki"
+inputs = [ "nginx_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.nginx_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  job = "nginx"
+  vhost = "{{ vhost }}"
+
+  [sinks.nginx_loki.encoding]
+  codec = "json"
+
+  [sinks.nginx_loki.buffer]
+  max_size = 268435488
+  type = "disk"
+

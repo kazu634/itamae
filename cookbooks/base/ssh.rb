@@ -8,7 +8,17 @@ execute 'ufw allow 10022' do
 end
 
 # Deploy the `sshd` configuration file:
-case run_command('grep VERSION_ID /etc/os-release | awk -F\" \'{print $2}\'').stdout.chomp
+case node['platform_version']
+when "22.04"
+  remote_file '/etc/ssh/sshd_config' do
+    user 'root'
+    owner 'root'
+    group 'root'
+    mode '644'
+
+    source 'files/etc/ssh/sshd_config.2204'
+  end
+
 when "20.04"
   remote_file '/etc/ssh/sshd_config' do
     user 'root'
@@ -28,6 +38,7 @@ when "18.04"
 
     source 'files/etc/ssh/sshd_config.1804'
   end
+
 else
   remote_file '/etc/ssh/sshd_config' do
     user 'root'

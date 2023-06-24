@@ -1,0 +1,101 @@
+groups:
+- name: services
+  rules:
+  - alert: Digdag
+    expr: node_systemd_unit_state{name="digdag.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "Digdag is not running: {{ $labels.instance }}."
+      description: "Digdag is not running: {{ $labels.instance }}."
+
+  - alert: node_exporter
+    expr: node_systemd_unit_state{name="node_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "node_exporter is not running: {{ $labels.instance }}."
+      description: "node_exporter is not running: {{ $labels.instance }}."
+
+  - alert: vector-node_exporter
+    expr: node_systemd_unit_state{name="vector-node_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-node_exporter is not running: {{ $labels.instance }}."
+      description: "vector-node_exporter is not running: {{ $labels.instance }}."
+
+  - alert: snmp_exporter
+    expr: node_systemd_unit_state{name="snmp_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "snmp_exporter is not running: {{ $labels.instance }}."
+      description: "snmp_exporter is not running: {{ $labels.instance }}."
+
+  - alert: vector-snmp_exporter
+    expr: node_systemd_unit_state{name="vector-snmp_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-snmp_exporter is not running: {{ $labels.instance }}."
+      description: "vector-snmp_exporter is not running: {{ $labels.instance }}."
+
+  - alert: filestat_exporter
+    expr: node_systemd_unit_state{name="filestat_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "filestat_exporter is not running: {{ $labels.instance }}."
+      description: "filestat_exporter is not running: {{ $labels.instance }}."
+
+  - alert: vector-filestat_exporter
+    expr: node_systemd_unit_state{name="vector-filestat_exporter.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-filestat_exporter is not running: {{ $labels.instance }}."
+      description: "vector-filestat_exporter is not running: {{ $labels.instance }}."
+
+  - alert: exporter_proxy
+    expr: node_systemd_unit_state{name="exporter_proxy.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "exporter_proxy is not running: {{ $labels.instance }}."
+      description: "exporter_proxy is not running: {{ $labels.instance }}."
+
+  - alert: prometheus
+    expr: node_systemd_unit_state{name="prometheus.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "prometheus is not running: {{ $labels.instance }}."
+      description: "prometheus is not running: {{ $labels.instance }}."
+
+  - alert: vector-prometheus
+    expr: node_systemd_unit_state{name="vector-prometheus.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vector-prometheus is not running: {{ $labels.instance }}."
+      description: "vector-prometheus is not running: {{ $labels.instance }}."
+
+  - alert: vault
+    expr: node_systemd_unit_state{name="vault.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: error
+    annotations:
+      summary: "vault is not running: {{ $labels.instance }}."
+      description: "vault is not running: {{ $labels.instance }}."

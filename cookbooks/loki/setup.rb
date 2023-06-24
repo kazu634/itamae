@@ -89,11 +89,6 @@ remote_file '/etc/logrotate.d/loki' do
   mode '644'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
-  action :nothing
-end
-
 # Firewall settings here:
 %w( 3100/tcp ).each do |p|
   execute "ufw allow #{p}" do

@@ -24,7 +24,7 @@ begin
   Timeout.timeout(3) do
     response = Net::HTTP.get_response(uri)
 
-    if response.body =~ %r{tag\/(v\d+\.\d+\.\d+)}
+    if response['location'] =~ %r{tag\/(v\d+\.\d+\.\d+)}
       vtag        = $1
       tag_version = vtag.sub('v', '')
 
@@ -78,26 +78,27 @@ directory "#{LEGO_STORAGE}" do
   mode '755'
 end
 
-encrypted_remote_file "#{LEGO_STORAGE}/lego_run.sh" do
-  owner 'root'
-  group 'root'
-  mode '500'
-  source   "files/#{LEGO_STORAGE}/lego_run.sh"
-  password ENV['ITAMAE_PASSWORD']
-end
+%w( kazu634 everun ).each do |domain|
+  encrypted_remote_file "#{LEGO_STORAGE}/#{domain}_run.sh" do
+    owner 'root'
+    group 'root'
+    mode '500'
+    source   "files/#{LEGO_STORAGE}/#{domain}_run.sh"
+    password ENV['ITAMAE_PASSWORD']
+  end
 
-execute "#{LEGO_STORAGE}/lego_run.sh" do
-  user 'root'
-  cwd LEGO_STORAGE
-  not_if "test -d #{LEGO_STORAGE}/.lego"
-end
+  execute "#{LEGO_STORAGE}/#{domain}_run.sh" do
+    user 'root'
+    cwd LEGO_STORAGE
+  end
 
-encrypted_remote_file '/etc/cron.d/lego' do
-  owner 'root'
-  group 'root'
-  mode '644'
-  source   'files/etc/cron.d/lego'
-  password ENV['ITAMAE_PASSWORD']
+  encrypted_remote_file "/etc/cron.d/#{domain}" do
+    owner 'root'
+    group 'root'
+    mode '644'
+    source   "files/etc/cron.d/#{domain}"
+    password ENV['ITAMAE_PASSWORD']
+  end
 end
 
 remote_file "/etc/lego/dhparams_4096.pem" do

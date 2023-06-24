@@ -1,0 +1,54 @@
+data_dir = "/var/lib/vector/"
+
+[sources.snmp_exporter]
+  type = "file"
+  include = [ "/var/log/snmp_exporter.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.snmp_exporter_transform]
+  type = "remap"
+  inputs = ["snmp_exporter"]
+  source = '''
+    . |= parse_syslog!(.message)
+
+    . |= parse_key_value!(.message)
+
+    del(.message)
+    del(.host)
+
+    .message = .msg
+    del(.msg)
+  '''
+
+[sinks.snmp_exporter_output]
+type = "file"
+inputs = [ "snmp_exporter_transform" ]
+compression = "none"
+path = "/tmp/snmp_exporter-%Y-%m-%d.log"
+
+  [sinks.snmp_exporter_output.encoding]
+  codec = "json"
+
+  [sinks.snmp_exporter_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.snmp_exporter_loki]
+type = "loki"
+inputs = [ "snmp_exporter_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.snmp_exporter_loki.labels]
+  level = "{{ level }}"
+  hostname = "{{ hostname }}"
+  job = "snmp_exporter"
+  filename = "/var/log/snmp_exporter.log"
+
+  [sinks.snmp_exporter_loki.encoding]
+  codec = "json"
+
+  [sinks.snmp_exporter_loki.buffer]
+  max_size = 268435488
+  type = "disk"

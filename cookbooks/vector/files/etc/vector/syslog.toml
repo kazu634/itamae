@@ -9,7 +9,7 @@ data_dir = "/var/lib/vector"
   type = "remap"
   inputs = [ "syslog" ]
   source = """
-    if contains(.severity, "err") {
+    if contains(.severity, "err") ?? false {
       .severity = "error"
     }
 
@@ -22,7 +22,7 @@ data_dir = "/var/lib/vector"
   inputs = [ "reformat-syslog" ]
   condition = '.sev_filter == true && .msg_filter == true'
 
-[sinks.docker-logs]
+[sinks.send-logs]
   type             = "loki"
   inputs           = ["filter-syslog"]
   endpoint         = "http://192.168.10.101:3100"
@@ -34,11 +34,4 @@ data_dir = "/var/lib/vector"
   labels.level     = "{{ severity }}"
   labels.job       = "syslog"
   labels.hostname  = "{{ host }}"
-
-[sinks.file]
-  type = "file"
-  inputs = ["reformat-syslog"]
-  compression = "none"
-  path = "/tmp/vector-%Y-%m-%d.log"
-  encoding = "ndjson"
 

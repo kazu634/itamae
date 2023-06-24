@@ -1,4 +1,10 @@
 # Ignore the certificate
+directory '/etc/docker/' do
+  owner 'root'
+  group 'root'
+  mode  '0600'
+end
+
 remote_file '/etc/docker/daemon.json' do
   owner 'root'
   group 'root'

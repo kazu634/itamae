@@ -1,26 +1,71 @@
+# Create User and group:
+user 'prometheus' do
+  system_user true
+  shell '/sbin/nologin'
+end
+
 # Create `/etc/prometheus.d/`:
-%w(/etc/prometheus.d).each do |d|
+%w( /etc/prometheus.d /var/opt/prometheus ).each do |d|
   directory d do
-    owner  'root'
-    group  'root'
-    mode   '0755'
+    owner  'prometheus'
+    group  'prometheus'
+    mode   '0744'
   end
 end
 
 # Deploy `prometheus` files:
 remote_file '/etc/prometheus.d/prometheus.yml' do
+  owner  'prometheus'
+  group  'prometheus'
+  mode   '644'
+end
+
+# Deploy `systemd` configuration for `prometheus`:
+remote_file '/etc/systemd/system/prometheus.service' do
   owner  'root'
   group  'root'
   mode   '644'
 end
 
-# Deploy `supervisor` configuration for `prometheus`:
-remote_file '/etc/supervisor/conf.d/prometheus.conf' do
+service 'prometheus' do
+  action [:enable, :start]
+end
+
+# Depoy `rsyslog` configuration for `prometheus`:
+remote_file '/etc/rsyslog.d/30-prometheus.conf' do
   owner  'root'
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[rsyslog]'
+end
+
+service 'rsyslog' do
+  action :nothing
+end
+
+# Depoy `logrotate` configuration for `prometheus`:
+remote_file '/etc/logrotate.d/prometheus' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
+# Depoy `vector` configuration for `prometheus`:
+remote_file '/etc/vector/prometheus.toml' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
+remote_file '/etc/systemd/system/vector-prometheus.service' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+end
+
+service 'vector-prometheus' do
+  action [:enable, :start]
 end
 
 # Depoy `consul` service configuration for `prometheus`:

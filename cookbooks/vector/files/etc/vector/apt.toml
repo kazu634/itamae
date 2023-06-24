@@ -1,0 +1,48 @@
+data_dir = "/var/lib/vector/"
+
+[sources.apt]
+  type = "file"
+  include = [ "/var/log/apt/history.log" ]
+  ignore_older_secs = 600
+  read_from = "beginning"
+
+[transforms.apt_transform]
+  type = "remap"
+  inputs = ["apt"]
+  source = '''
+    .hostname = .host
+    del(.host)
+  '''
+
+[sinks.apt_output]
+type = "file"
+inputs = [ "apt_transform" ]
+compression = "none"
+path = "/tmp/apt-%Y-%m-%d.log"
+
+  [sinks.apt_output.encoding]
+  codec = "json"
+
+  [sinks.apt_output.buffer]
+  max_size = 268435488
+  type = "disk"
+
+[sinks.apt_loki]
+type = "loki"
+inputs = [ "apt_transform" ]
+endpoint = "http://loki.service.consul:3100"
+compression = "snappy"
+
+  [sinks.apt_loki.labels]
+  level = "notice"
+  hostname = "{{ hostname }}"
+  job = "apt"
+  filename = "{{ file }}"
+
+  [sinks.apt_loki.encoding]
+  codec = "json"
+
+  [sinks.apt_loki.buffer]
+  max_size = 268435488
+  type = "disk"
+

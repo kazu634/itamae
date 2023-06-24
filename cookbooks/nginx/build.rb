@@ -38,7 +38,7 @@ begin
   Timeout.timeout(3) do
     response = Net::HTTP.get_response(uri)
 
-    if response.body =~ %r{tag\/(v\d+\.\d+\.\d+)}
+    if response['location'] =~ %r{tag\/(v\d+\.\d+\.\d+)}
       vtag        = $1
       tag_version = vtag.sub('v', '')
 
@@ -78,7 +78,7 @@ directory MODULEDIR do
 end
 
 # Build starts here:
-execute "#{NGINXBUILD} -d working -v #{version} -c configure.sh -zlib -pcre -openssl -opensslversion=1.1.1d" do
+execute "#{NGINXBUILD} -d working -v #{version} -c configure.sh -zlib -pcre -libressl -libresslversion 3.8.0" do
   cwd WORKDIR
   user USER
 

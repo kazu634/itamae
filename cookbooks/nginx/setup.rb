@@ -13,7 +13,7 @@ remote_file '/lib/systemd/system/nginx.service' do
 end
 
 # Firewall Setting:
-%w( 80/tcp 443/tcp ).each do |port|
+%w( 80/tcp 443/tcp 443/udp ).each do |port|
   execute "ufw allow #{port}" do
     user 'root'
 
@@ -35,25 +35,36 @@ service 'nginx' do
   action [ :enable, :start ]
 end
 
-# Deploy `promtail` config file:
-HOSTNAME = run_command('uname -n').stdout.chomp
-
-template '/etc/promtail/nginx.yaml' do
-  owner 'root'
-  group 'root'
-  mode '644'
-
-  variables(HOSTNAME: HOSTNAME, LOKIENDPOINT: node['promtail']['lokiendpoint'])
-end
-
-# Deploy the `systemd` configuration:
-remote_file '/lib/systemd/system/promtail-nginx.service' do
+# Deploy `vector` config:
+remote_file '/etc/vector/nginx-access.toml' do
   owner 'root'
   group 'root'
   mode '644'
 end
 
-# Service setting:
-service 'promtail-nginx' do
-  action [ :enable, :restart ]
+remote_file '/etc/systemd/system/vector-nginx-access.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
 end
+
+service 'vector-nginx-access' do
+  action [ :enable, :start ]
+end
+
+remote_file '/etc/vector/nginx-error.toml' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+remote_file '/etc/systemd/system/vector-nginx-error.service' do
+  owner 'root'
+  group 'root'
+  mode '644'
+end
+
+service 'vector-nginx-error' do
+  action [ :enable, :start ]
+end
+

@@ -8,37 +8,78 @@
 end
 
 # Deploy `alertmanager` file:
-remote_file '/etc/prometheus.d/alertmanager.yml' do
-  owner  'root'
-  group  'root'
-  mode   '644'
+encrypted_remote_file '/etc/prometheus.d/alertmanager.yml' do
+  owner 'root'
+  group 'root'
+  mode  '644'
 
-  notifies :restart, 'service[supervisor]'
+  source 'files/etc/prometheus.d/alertmanager.yml/'
+  password ENV['ITAMAE_PASSWORD']
+
+  notifies :restart, 'service[alertmanager]'
 end
 
 # Deploy alert setting file:
-%w(node_exporter prometheus filestat).each do |conf|
+%w(node_exporter prometheus filestat services snmp).each do |conf|
   remote_file "/etc/prometheus.d/alerts/#{conf}.yml" do
     owner  'root'
     group  'root'
     mode   '644'
 
-    notifies :restart, 'service[supervisor]'
+    notifies :restart, 'service[prometheus]'
   end
 end
 
-# Deploy `supervisord` config:
-remote_file '/etc/supervisor/conf.d/alertmanager.conf' do
+# Deploy `systemd` config for `alertmanager`:
+remote_file '/etc/systemd/system/alertmanager.service' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
+service 'alertmanager' do
+  action [:enable, :start]
+end
+
+# Deploy `rsyslog` config for `alertmanager`:
+remote_file '/etc/rsyslog.d/30-alertmanager.conf' do
   owner  'root'
   group  'root'
   mode   '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[rsyslog]'
 end
 
-# Restart the `supervisor`:
-service 'supervisor' do
+service 'rsyslog' do
   action :nothing
+end
+
+# Deploy `logroted` config for `alertmanager`:
+remote_file '/etc/logrotate.d/alertmanager' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+end
+
+# Deploy `vector` config for `alertmanager`:
+remote_file '/etc/vector/alertmanager.toml' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[vector-alertmanager]'
+end
+
+remote_file '/etc/systemd/system/vector-alertmanager.service' do
+  owner  'root'
+  group  'root'
+  mode   '644'
+
+  notifies :restart, 'service[vector-alertmanager]'
+end
+
+service 'vector-alertmanager' do
+  action [:enable, :start]
 end
 
 # Firewall settings here:

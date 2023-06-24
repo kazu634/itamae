@@ -3,8 +3,8 @@
 # -------------------------------------------
 node.reverse_merge!({
   'nginx' => {
-    'version' => '1.21.3',
-    'skip_lego' => 'false',
-    'skip_webadm' => 'false'
+    'version' => '1.25.0',
+    'skip_lego' => 'true',
+    'skip_webadm' => 'true'
   }
 })

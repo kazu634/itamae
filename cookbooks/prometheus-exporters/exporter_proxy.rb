@@ -1,4 +1,4 @@
-URL = 'https://github.com/rrreeeyyy/exporter_proxy/releases/download/v0.1.0/exporter_proxy_linux_amd64'
+URL = 'https://github.com/rrreeeyyy/exporter_proxy/releases/download/v0.4.1/exporter_proxy_linux_amd64'
 BIN = '/usr/local/bin/exporter_proxy'
 CONFDIR = '/etc/prometheus_exporters.d/exporter_proxy/'
 CONF = 'config.yml'
@@ -28,16 +28,27 @@ remote_file "#{CONFDIR}#{CONF}" do
   mode '644'
 end
 
-remote_file '/etc/supervisor/conf.d/exporter_proxy.conf' do
+remote_file '/etc/systemd/system/exporter_proxy.service' do
+  user 'root'
+  group 'root'
+
+  mode '644'
+end
+
+service 'exporter_proxy' do
+  action [:enable, :start]
+end
+
+remote_file '/etc/consul.d/service-exporter_proxy.json' do
   user 'root'
   group 'root'
 
   mode '644'
 
-  notifies :restart, 'service[supervisor]'
+  notifies :restart, 'service[consul]'
 end
 
-service 'supervisor' do
+service 'consul' do
   action :nothing
 end
 

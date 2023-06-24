@@ -19,6 +19,7 @@ node.reverse_merge!({
     'url' => 'https://github.com/vectordotdev/vector/releases/download/',
     'ipaddr' => ipaddr,
     'debPrefix' => 'vector-',
-    'debPostfix' => '-amd64.deb'
+    'debPostfix' => '-amd64.deb',
+    'isSyslog' => false
   },
 })

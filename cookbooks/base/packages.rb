@@ -62,3 +62,13 @@ end
     mode '755'
   end
 end
+
+# mDNS
+package 'avahi-daemon'
+
+execute 'ufw allow 5353/udp' do
+  user 'root'
+
+  not_if 'LANG=c ufw status | grep 5353'
+  notifies :run, 'execute[ufw reload-or-enable]'
+end

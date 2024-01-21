@@ -66,6 +66,9 @@ include_recipe './lsyncd.rb'
 # Install starship command:
 include_recipe './starship.rb'
 
+# Install cloudflared command:
+include_recipe './cloudflared.rb'
+
 # recipes for Ubuntu 20.04 and later
 case node['platform_version']
 when "20.04", "22.04"
